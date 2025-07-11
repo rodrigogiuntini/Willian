@@ -2241,46 +2241,62 @@ Descrição: Breve descrição (opcional)
         }
 
         async function enviarBriefingPorEmail() {
-            console.log('🚀 [DEBUG] === INÍCIO DO ENVIO ===');
+            console.log('🚀 [DEBUG] === INÍCIO DO ENVIO SIMPLIFICADO ===');
+            
+            // SOLUÇÃO DEFINITIVA: Pular o template específico e ir direto para o fallback
+            console.log('🔄 [DEBUG] Usando método garantido: Fallback direto');
             
             try {
-                // Tentar envio com fallback automático
-                const result = await enviarViaEmailJS();
+                // Preparar dados formatados para email
+                const dadosFormatados = formatarDadosParaEmail();
                 
-                console.log('✅ [DEBUG] Envio bem-sucedido:', result);
+                // Inicializar EmailJS
+                emailjs.init({ publicKey: CONFIG_EMAILJS.publicKey });
+                
+                // Adaptar parâmetros para template do contrato
+                const fallbackParams = {
+                    to_email: 'rodrigorochagiuntini@bityx.app',
+                    subject: '🎬 Novo Briefing - ' + (briefingData.nomeArtistico || 'Willian'),
+                    cliente_nome: briefingData.nomeArtistico || 'Willian',
+                    cliente_email: briefingData.emailOrcamento || 'Não informado',
+                    cliente_telefone: briefingData.whatsapp || 'Não informado',
+                    data_contrato: new Date().toLocaleDateString('pt-BR'),
+                    message: dadosFormatados,
+                    assinatura_cliente: 'Briefing automatizado',
+                    assinatura_prestador: 'Sistema de briefing'
+                };
+                
+                console.log('🔄 [DEBUG] Enviando com fallback garantido:', fallbackParams);
+                
+                const response = await emailjs.send(
+                    CONFIG_EMAILJS.serviceId,
+                    'template_i076npw', // Template do contrato que sabemos que funciona
+                    fallbackParams
+                );
+                
+                console.log('✅ [DEBUG] SUCESSO GARANTIDO: Email enviado:', response);
                 hideModal();
                 
-                // Verificar se foi enviado via fallback
-                if (result && result.fallback) {
-                    showModal({
-                        type: 'warning',
-                        icon: '⚠️',
-                        title: 'Briefing enviado via fallback!',
-                        message: 'Seu briefing foi enviado com sucesso, mas usando o template do contrato pois o template específico não foi encontrado. O Rodrigo receberá todos os dados normalmente.',
-                        buttons: [{text: 'Entendi', action: 'close', style: 'primary'}]
-                    });
-                } else {
-                    showModal({
-                        type: 'success',
-                        icon: '✅',
-                        title: 'Briefing enviado!',
-                        message: 'Seu briefing foi enviado com sucesso para rodrigorochagiuntini@bityx.app. Retorno em até 24 horas.',
-                        buttons: [{text: 'Perfeito', action: 'close', style: 'success'}]
-                    });
-                }
+                showModal({
+                    type: 'success',
+                    icon: '✅',
+                    title: 'Briefing enviado com sucesso!',
+                    message: 'Seu briefing foi enviado usando o template do contrato (método garantido). O Rodrigo receberá todos os dados normalmente.',
+                    buttons: [{text: 'Perfeito', action: 'close', style: 'success'}]
+                });
                 
             } catch (error) {
-                console.error('❌ [DEBUG] ERRO FINAL - Nem template específico nem fallback funcionaram:', error);
+                console.error('❌ [DEBUG] ERRO CRÍTICO - Nem o fallback funcionou:', error);
                 hideModal();
                 
                 showModal({
                     type: 'error',
                     icon: '❌',
-                    title: 'Falha total no envio',
-                    message: 'Não foi possível enviar nem com template específico nem com fallback. Tente o botão "Forçar Fallback" ou baixe o briefing.',
+                    title: 'Erro crítico',
+                    message: 'Algo está muito errado com a configuração do EmailJS. Baixe o briefing e envie manualmente.',
                     buttons: [
-                        {text: 'Forçar Fallback', action: () => { enviarComFallback(); hideModal(); }, style: 'primary'},
-                        {text: 'Baixar Briefing', action: () => { downloadBriefing(); hideModal(); }, style: 'secondary'}
+                        {text: 'Baixar Briefing', action: () => { downloadBriefing(); hideModal(); }, style: 'primary'},
+                        {text: 'Ver Console', action: () => { console.log('ERRO COMPLETO:', error); hideModal(); }, style: 'secondary'}
                     ]
                 });
             }
