@@ -78,16 +78,68 @@ Este email foi enviado automaticamente pelo sistema de briefing.
 
 ### 5. Parâmetros Utilizados
 
+### **Parâmetros Básicos:**
 | Parâmetro | Descrição | Exemplo |
 |-----------|-----------|---------|
 | `to_name` | Nome do destinatário | Rodrigo Rocha Giuntini |
 | `to_email` | Email do destinatário | rodrigorochagiuntini@bityx.app |
-| `from_name` | Nome do cliente | Willian / Nome artístico |
+| `from_name` | Nome do cliente | Willian |
 | `from_email` | Email do cliente | contato@willian.com |
 | `subject` | Assunto do email | 🎬 Novo Briefing - Willian |
-| `message` | Conteúdo formatado do briefing | Dados completos do briefing |
+| `message` | Dados completos formatados | Briefing completo em texto |
 | `reply_to` | Email para resposta | contato@willian.com |
 | `data_briefing` | Data/hora do briefing | 15 de dezembro de 2024 às 14:30 |
+
+### **1. Informações Gerais:**
+| Parâmetro | Descrição | Exemplo |
+|-----------|-----------|---------|
+| `cliente_nome_artistico` | Nome artístico/profissional | João Silva Films |
+| `cliente_area` | Área de atuação | Videomaker |
+| `cliente_bio` | Biografia para o site | Videomaker apaixonado por... |
+
+### **2. Estilo Visual:**
+| Parâmetro | Descrição | Exemplo |
+|-----------|-----------|---------|
+| `cliente_vibe` | Todas as vibes selecionadas | Clean & Minimalista, Moderno & Tech |
+| `cliente_vibe_principal` | Primeira vibe selecionada | Clean & Minimalista |
+| `cliente_cores` | Cores preferidas | Azul escuro, tons terrosos |
+| `cliente_tem_logo` | Se possui logotipo | Sim, tenho logotipo |
+
+### **3. Conteúdo:**
+| Parâmetro | Descrição | Exemplo |
+|-----------|-----------|---------|
+| `quantidade_projetos` | Número de projetos | 5 projetos |
+| `links_projetos` | Links dos vídeos | https://youtu.be/exemplo1... |
+| `infos_projetos` | Informações detalhadas | PROJETO 1: Título... |
+
+### **4. Referências:**
+| Parâmetro | Descrição | Exemplo |
+|-----------|-----------|---------|
+| `referencia_rafa` | Inspiração no Rafa Webber | Organização dos projetos, Layout geral |
+| `outras_referencias` | Outras referências | Link para site inspirador... |
+
+### **5. Estrutura:**
+| Parâmetro | Descrição | Exemplo |
+|-----------|-----------|---------|
+| `secoes_site` | Seções do site | Portfólio, Sobre mim, Contato |
+| `secao_extra` | Seção adicional | Galeria de fotos |
+
+### **6. Contatos:**
+| Parâmetro | Descrição | Exemplo |
+|-----------|-----------|---------|
+| `cliente_instagram` | Instagram | @willianfilms |
+| `cliente_whatsapp` | WhatsApp formatado | (11) 99999-9999 |
+| `cliente_whatsapp_clean` | WhatsApp só números | 11999999999 |
+| `cliente_email` | Email para orçamentos | contato@willian.com |
+| `outras_redes` | Outras redes sociais | YouTube, TikTok, LinkedIn |
+
+### **7. Extras:**
+| Parâmetro | Descrição | Exemplo |
+|-----------|-----------|---------|
+| `frase_impacto` | Frase para o topo | Transformando momentos em memórias |
+| `historia_especial` | História/diferencial | Como comecei na área... |
+| `funcionalidade_especial` | Funcionalidades específicas | Galeria antes/depois |
+| `observacoes` | Observações gerais | Preferência por cores escuras |
 
 ---
 
@@ -132,9 +184,32 @@ O template HTML criado oferece:
      "from_name": "Willian Teste",
      "from_email": "teste@willian.com",
      "subject": "🎬 Teste Briefing - Willian",
-     "message": "Teste de conteúdo do briefing...",
+     "message": "🎬 BRIEFING COMPLETO - PORTFÓLIO AUDIOVISUAL\n📝 CLIENTE: WILLIAN\n\n1. INFORMAÇÕES GERAIS\n• Nome artístico: Willian Films\n• Área: Videomaker\n• Bio: Videomaker apaixonado por contar histórias...",
      "reply_to": "teste@willian.com",
-     "data_briefing": "15 de dezembro de 2024 às 14:30"
+     "data_briefing": "15 de dezembro de 2024 às 14:30",
+     "cliente_nome_artistico": "Willian Films",
+     "cliente_area": "Videomaker",
+     "cliente_bio": "Videomaker apaixonado por contar histórias através de imagens",
+     "cliente_vibe": "Clean & Minimalista, Cinematográfico",
+     "cliente_vibe_principal": "Clean & Minimalista",
+     "cliente_cores": "Azul escuro, tons terrosos",
+     "cliente_tem_logo": "Sim, tenho logotipo",
+     "quantidade_projetos": "5 projetos",
+     "links_projetos": "https://youtu.be/exemplo1\nhttps://vimeo.com/exemplo2",
+     "infos_projetos": "PROJETO 1:\nTítulo: Clipe Musical XYZ\nDescrição: Clipe para artista local",
+     "referencia_rafa": "Organização dos projetos, Layout geral",
+     "outras_referencias": "Site do filmmaker ABC - cores escuras",
+     "secoes_site": "Portfólio, Sobre mim, Contato, Serviços",
+     "secao_extra": "Galeria de fotos",
+     "cliente_instagram": "@willianfilms",
+     "cliente_whatsapp": "(11) 99999-9999",
+     "cliente_whatsapp_clean": "11999999999",
+     "cliente_email": "teste@willian.com",
+     "outras_redes": "YouTube, TikTok",
+     "frase_impacto": "Transformando momentos em memórias",
+     "historia_especial": "Comecei na área aos 18 anos...",
+     "funcionalidade_especial": "Galeria de antes/depois",
+     "observacoes": "Preferência por cores escuras e design limpo"
    }
    ```
 4. Enviar teste

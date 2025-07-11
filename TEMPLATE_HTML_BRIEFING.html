@@ -1,11 +1,11 @@
-<div style="font-family: system-ui, sans-serif, Arial; font-size: 16px; max-width: 600px; margin: 0 auto; background: #ffffff;">
+<div style="font-family: system-ui, sans-serif, Arial; font-size: 16px; max-width: 700px; margin: 0 auto; background: #ffffff;">
   <!-- Header com logo -->
   <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 24px; text-align: center; border-radius: 8px 8px 0 0;">
     <h1 style="color: #ffffff; margin: 0; font-size: 24px; font-weight: 700;">
       🎬 Novo Briefing Recebido
     </h1>
     <p style="color: rgba(255,255,255,0.9); margin: 8px 0 0 0; font-size: 14px;">
-      Sistema de Portfólio Audiovisual
+      Sistema de Portfólio Audiovisual - {{data_briefing}}
     </p>
   </div>
 
@@ -16,27 +16,157 @@
     </p>
     
     <p style="margin: 0 0 24px 0; line-height: 1.6; color: #64748b;">
-      Você recebeu um novo briefing de <strong>{{from_name}}</strong> para desenvolvimento de portfólio audiovisual!
+      Você recebeu um novo briefing de <strong>{{cliente_nome_artistico}}</strong> para desenvolvimento de portfólio audiovisual!
     </p>
 
-    <!-- Informações do cliente -->
+    <!-- 1. INFORMAÇÕES GERAIS -->
     <div style="background: #f8fafc; border-left: 4px solid #667eea; padding: 20px; margin: 24px 0; border-radius: 0 8px 8px 0;">
-      <h3 style="margin: 0 0 12px 0; color: #2c3e50; font-size: 16px;">
-        📋 Informações do Cliente:
+      <h3 style="margin: 0 0 16px 0; color: #2c3e50; font-size: 16px;">
+        👤 Informações Gerais:
       </h3>
-             <p style="margin: 0; color: #64748b; line-height: 1.5;">
-         <strong>Email:</strong> {{from_email}}<br>
-         <strong>Data:</strong> {{data_briefing}}
-       </p>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+        <div>
+          <strong style="color: #667eea;">Nome Artístico:</strong><br>
+          <span style="color: #2c3e50;">{{cliente_nome_artistico}}</span>
+        </div>
+        <div>
+          <strong style="color: #667eea;">Área:</strong><br>
+          <span style="color: #2c3e50;">{{cliente_area}}</span>
+        </div>
+      </div>
+      <div>
+        <strong style="color: #667eea;">Bio para o site:</strong><br>
+        <span style="color: #2c3e50; font-style: italic;">{{cliente_bio}}</span>
+      </div>
     </div>
 
-    <!-- Detalhes do briefing -->
-    <div style="margin: 24px 0;">
-      <h3 style="margin: 0 0 16px 0; color: #2c3e50; font-size: 18px; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px;">
-        📝 Detalhes Completos do Briefing:
+    <!-- 2. ESTILO VISUAL -->
+    <div style="background: linear-gradient(135deg, #fdf2f8 0%, #fce7f3 100%); border-left: 4px solid #ec4899; padding: 20px; margin: 24px 0; border-radius: 0 8px 8px 0;">
+      <h3 style="margin: 0 0 16px 0; color: #2c3e50; font-size: 16px;">
+        🎨 Estilo Visual:
       </h3>
-      <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px; white-space: pre-line; font-family: 'Courier New', monospace; font-size: 14px; line-height: 1.6; color: #374151;">{{message}}</div>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+        <div>
+          <strong style="color: #ec4899;">Vibe:</strong><br>
+          <span style="color: #2c3e50;">{{cliente_vibe}}</span>
+        </div>
+        <div>
+          <strong style="color: #ec4899;">Cores:</strong><br>
+          <span style="color: #2c3e50;">{{cliente_cores}}</span>
+        </div>
+      </div>
+      <div>
+        <strong style="color: #ec4899;">Logotipo:</strong><br>
+        <span style="color: #2c3e50;">{{cliente_tem_logo}}</span>
+      </div>
     </div>
+
+    <!-- 3. CONTEÚDO -->
+    <div style="background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%); border-left: 4px solid #f59e0b; padding: 20px; margin: 24px 0; border-radius: 0 8px 8px 0;">
+      <h3 style="margin: 0 0 16px 0; color: #2c3e50; font-size: 16px;">
+        🎥 Conteúdo do Portfólio:
+      </h3>
+      <div style="margin-bottom: 16px;">
+        <strong style="color: #f59e0b;">Quantidade de projetos:</strong><br>
+        <span style="color: #2c3e50;">{{quantidade_projetos}} projetos</span>
+      </div>
+      <div style="margin-bottom: 16px;">
+        <strong style="color: #f59e0b;">Links dos projetos:</strong><br>
+        <div style="background: #ffffff; border: 1px solid #e5e7eb; border-radius: 4px; padding: 12px; font-family: monospace; font-size: 13px; white-space: pre-line; color: #374151;">{{links_projetos}}</div>
+      </div>
+      <div>
+        <strong style="color: #f59e0b;">Informações dos projetos:</strong><br>
+        <div style="background: #ffffff; border: 1px solid #e5e7eb; border-radius: 4px; padding: 12px; font-family: monospace; font-size: 13px; white-space: pre-line; color: #374151;">{{infos_projetos}}</div>
+      </div>
+    </div>
+
+    <!-- 4. REFERÊNCIAS -->
+    <div style="background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); border-left: 4px solid #0284c7; padding: 20px; margin: 24px 0; border-radius: 0 8px 8px 0;">
+      <h3 style="margin: 0 0 16px 0; color: #2c3e50; font-size: 16px;">
+        💡 Referências:
+      </h3>
+      <div style="margin-bottom: 16px;">
+        <strong style="color: #0284c7;">Inspiração no Rafa Webber:</strong><br>
+        <span style="color: #2c3e50;">{{referencia_rafa}}</span>
+      </div>
+      <div>
+        <strong style="color: #0284c7;">Outras referências:</strong><br>
+        <span style="color: #2c3e50; white-space: pre-line;">{{outras_referencias}}</span>
+      </div>
+    </div>
+
+    <!-- 5. ESTRUTURA DO SITE -->
+    <div style="background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border-left: 4px solid #22c55e; padding: 20px; margin: 24px 0; border-radius: 0 8px 8px 0;">
+      <h3 style="margin: 0 0 16px 0; color: #2c3e50; font-size: 16px;">
+        🏗️ Estrutura do Site:
+      </h3>
+      <div style="margin-bottom: 16px;">
+        <strong style="color: #22c55e;">Seções incluídas:</strong><br>
+        <span style="color: #2c3e50;">{{secoes_site}}</span>
+      </div>
+      <div>
+        <strong style="color: #22c55e;">Seção adicional:</strong><br>
+        <span style="color: #2c3e50;">{{secao_extra}}</span>
+      </div>
+    </div>
+
+    <!-- 6. CONTATOS -->
+    <div style="background: linear-gradient(135deg, #fefce8 0%, #fef3c7 100%); border-left: 4px solid #eab308; padding: 20px; margin: 24px 0; border-radius: 0 8px 8px 0;">
+      <h3 style="margin: 0 0 16px 0; color: #2c3e50; font-size: 16px;">
+        📱 Informações de Contato:
+      </h3>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+        <div>
+          <strong style="color: #eab308;">Instagram:</strong><br>
+          <span style="color: #2c3e50;">{{cliente_instagram}}</span>
+        </div>
+        <div>
+          <strong style="color: #eab308;">WhatsApp:</strong><br>
+          <span style="color: #2c3e50;">{{cliente_whatsapp}}</span>
+        </div>
+      </div>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+        <div>
+          <strong style="color: #eab308;">Email:</strong><br>
+          <span style="color: #2c3e50;">{{cliente_email}}</span>
+        </div>
+        <div>
+          <strong style="color: #eab308;">Outras redes:</strong><br>
+          <span style="color: #2c3e50;">{{outras_redes}}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 7. EXTRAS -->
+    <div style="background: linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%); border-left: 4px solid #8b5cf6; padding: 20px; margin: 24px 0; border-radius: 0 8px 8px 0;">
+      <h3 style="margin: 0 0 16px 0; color: #2c3e50; font-size: 16px;">
+        ✨ Toque Final:
+      </h3>
+      <div style="margin-bottom: 16px;">
+        <strong style="color: #8b5cf6;">Frase de impacto:</strong><br>
+        <span style="color: #2c3e50; font-style: italic; font-size: 16px;">"{{frase_impacto}}"</span>
+      </div>
+      <div style="margin-bottom: 16px;">
+        <strong style="color: #8b5cf6;">História especial:</strong><br>
+        <span style="color: #2c3e50; white-space: pre-line;">{{historia_especial}}</span>
+      </div>
+      <div style="margin-bottom: 16px;">
+        <strong style="color: #8b5cf6;">Funcionalidade especial:</strong><br>
+        <span style="color: #2c3e50; white-space: pre-line;">{{funcionalidade_especial}}</span>
+      </div>
+      <div>
+        <strong style="color: #8b5cf6;">Observações:</strong><br>
+        <span style="color: #2c3e50; white-space: pre-line;">{{observacoes}}</span>
+      </div>
+    </div>
+
+    <!-- Dados brutos (backup) -->
+    <details style="margin: 24px 0;">
+      <summary style="cursor: pointer; color: #667eea; font-weight: 600; margin-bottom: 12px;">
+        📋 Dados Completos (Clique para expandir)
+      </summary>
+      <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px; white-space: pre-line; font-family: 'Courier New', monospace; font-size: 13px; line-height: 1.5; color: #374151;">{{message}}</div>
+    </details>
 
     <!-- Call to action -->
     <div style="text-align: center; margin: 32px 0; padding: 24px; background: linear-gradient(135deg, #f0f4ff 0%, #e0e7ff 100%); border-radius: 8px;">
@@ -46,9 +176,17 @@
       <p style="margin: 0 0 16px 0; color: #64748b; line-height: 1.5;">
         Entre em contato com o cliente em até 24 horas para alinhar os detalhes e iniciar o projeto.
       </p>
-      <a href="mailto:{{from_email}}" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #ffffff; text-decoration: none; padding: 12px 24px; border-radius: 8px; font-weight: 600; font-size: 14px;">
-        📧 Responder Cliente
-      </a>
+      <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+        <a href="mailto:{{from_email}}" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #ffffff; text-decoration: none; padding: 12px 24px; border-radius: 8px; font-weight: 600; font-size: 14px;">
+          📧 Responder Email
+        </a>
+        <a href="https://wa.me/55{{cliente_whatsapp_clean}}" target="_blank" style="display: inline-block; background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); color: #ffffff; text-decoration: none; padding: 12px 24px; border-radius: 8px; font-weight: 600; font-size: 14px;">
+          📱 WhatsApp
+        </a>
+        <a href="https://instagram.com/{{cliente_instagram}}" target="_blank" style="display: inline-block; background: linear-gradient(135deg, #ec4899 0%, #be185d 100%); color: #ffffff; text-decoration: none; padding: 12px 24px; border-radius: 8px; font-weight: 600; font-size: 14px;">
+          📸 Instagram
+        </a>
+      </div>
     </div>
   </div>
 

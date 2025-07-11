@@ -2263,6 +2263,7 @@ Descrição: Breve descrição (opcional)
             });
             
             const templateParams = {
+                // Parâmetros básicos
                 to_name: 'Rodrigo Rocha Giuntini',
                 to_email: 'rodrigorochagiuntini@bityx.app',
                 from_name: briefingData.nomeArtistico || 'Willian',
@@ -2270,7 +2271,44 @@ Descrição: Breve descrição (opcional)
                 subject: '🎬 Novo Briefing - ' + (briefingData.nomeArtistico || 'Willian'),
                 message: dadosFormatados,
                 reply_to: briefingData.emailOrcamento || 'rodrigorochagiuntini@bityx.app',
-                data_briefing: dataAtual
+                data_briefing: dataAtual,
+                
+                // 1. INFORMAÇÕES GERAIS
+                cliente_nome_artistico: briefingData.nomeArtistico || 'Não informado',
+                cliente_area: briefingData.areaAtuacao || 'Não informado',
+                cliente_bio: briefingData.bioDescricao || 'Não informado',
+                
+                // 2. ESTILO VISUAL
+                cliente_vibe: briefingData.vibe ? briefingData.vibe.join(', ') : 'Não informado',
+                cliente_vibe_principal: briefingData.vibe ? briefingData.vibe[0] : 'Não informado',
+                cliente_cores: briefingData.corPrincipal || 'Não informado',
+                cliente_tem_logo: briefingData.temLogo || 'Não informado',
+                
+                // 3. CONTEÚDO
+                quantidade_projetos: briefingData.quantidadeProjetos || 'Não informado',
+                links_projetos: briefingData.linksProjetos || 'Não informado',
+                infos_projetos: briefingData.infosProjetos || 'Não informado',
+                
+                // 4. REFERÊNCIAS
+                referencia_rafa: briefingData.referencia ? briefingData.referencia.join(', ') : 'Não informado',
+                outras_referencias: briefingData.outrasReferencias || 'Não informado',
+                
+                // 5. ESTRUTURA
+                secoes_site: briefingData.secao ? briefingData.secao.join(', ') : 'Não informado',
+                secao_extra: briefingData.secaoExtra || 'Não informado',
+                
+                // 6. CONTATOS
+                cliente_instagram: briefingData.instagram || 'Não informado',
+                cliente_whatsapp: briefingData.whatsapp || 'Não informado',
+                cliente_whatsapp_clean: (briefingData.whatsapp || '').replace(/\D/g, ''),
+                cliente_email: briefingData.emailOrcamento || 'Não informado',
+                outras_redes: briefingData.outrasRedes || 'Não informado',
+                
+                // 7. EXTRAS
+                frase_impacto: briefingData.fraseImpacto || 'Não informado',
+                historia_especial: briefingData.historiaEspecial || 'Não informado',
+                funcionalidade_especial: briefingData.funcionalidadeEspecial || 'Não informado',
+                observacoes: briefingData.observacoes || 'Não informado'
             };
 
             // Enviar email via EmailJS (com fallback para template do contrato)
