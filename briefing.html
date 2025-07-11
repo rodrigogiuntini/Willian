@@ -1602,6 +1602,28 @@ Descrição: Breve descrição (opcional)
                                         <h4 style="font-size: 0.9em; color: #64748b; margin-bottom: 8px;">Status do EmailJS:</h4>
                                         <div id="statusServicos" style="font-size: 0.8em; color: #94a3b8;"></div>
                                     </div>
+                                    
+                                    <!-- Botões de Debug -->
+                                    <div style="margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px; border: 1px solid #e9ecef;">
+                                        <h4 style="font-size: 0.9em; color: #6c757d; margin-bottom: 10px;">🔧 Ferramentas de Debug</h4>
+                                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                                            <button type="button" onclick="diagnosticarProblemas()" style="background: #17a2b8; color: white; border: none; padding: 8px 12px; border-radius: 4px; font-size: 0.8em; cursor: pointer;">
+                                                🔍 Diagnosticar
+                                            </button>
+                                            <button type="button" onclick="testarConexaoEmailJS()" style="background: #17a2b8; color: white; border: none; padding: 8px 12px; border-radius: 4px; font-size: 0.8em; cursor: pointer;">
+                                                📡 Testar Conexão
+                                            </button>
+                                            <button type="button" onclick="console.log('Dados do briefing:', briefingData)" style="background: #17a2b8; color: white; border: none; padding: 8px 12px; border-radius: 4px; font-size: 0.8em; cursor: pointer;">
+                                                📋 Ver Dados
+                                            </button>
+                                            <button type="button" onclick="console.log('Configuração EmailJS:', CONFIG_EMAILJS)" style="background: #17a2b8; color: white; border: none; padding: 8px 12px; border-radius: 4px; font-size: 0.8em; cursor: pointer;">
+                                                ⚙️ Ver Config
+                                            </button>
+                                        </div>
+                                        <p style="margin: 8px 0 0 0; font-size: 0.75em; color: #6c757d;">
+                                            Use as ferramentas acima para diagnosticar problemas de envio. Verifique o console do navegador (F12) para logs detalhados.
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -2242,15 +2264,27 @@ Descrição: Breve descrição (opcional)
         }
 
         async function enviarViaEmailJS() {
+            console.log('🔍 [DEBUG] Iniciando envio via EmailJS...');
+            
             // Verificar se EmailJS está disponível
             if (typeof emailjs === 'undefined') {
+                console.error('❌ [DEBUG] EmailJS não foi carregado');
                 throw new Error('❌ EmailJS não foi carregado. Verifique sua conexão.');
             }
 
+            // Verificar configuração
+            console.log('🔍 [DEBUG] Configuração EmailJS:', CONFIG_EMAILJS);
+            
             // Inicializar EmailJS v4 (mesmo método do contrato)
-            emailjs.init({
-                publicKey: CONFIG_EMAILJS.publicKey,
-            });
+            try {
+                emailjs.init({
+                    publicKey: CONFIG_EMAILJS.publicKey,
+                });
+                console.log('✅ [DEBUG] EmailJS inicializado com sucesso');
+            } catch (initError) {
+                console.error('❌ [DEBUG] Erro ao inicializar EmailJS:', initError);
+                throw new Error('❌ Erro ao inicializar EmailJS: ' + initError.message);
+            }
             
             // Preparar dados formatados para email
             const dadosFormatados = formatarDadosParaEmail();
@@ -2311,15 +2345,44 @@ Descrição: Breve descrição (opcional)
                 observacoes: briefingData.observacoes || 'Não informado'
             };
 
+            // Debug: Verificar dados antes do envio
+            console.log('🔍 [DEBUG] Dados do briefing:', briefingData);
+            console.log('🔍 [DEBUG] Parâmetros a serem enviados:', templateParams);
+            console.log('🔍 [DEBUG] Tentando enviar para:', CONFIG_EMAILJS.serviceId, CONFIG_EMAILJS.templateId);
+            
+            // Validar parâmetros obrigatórios
+            const requiredParams = ['to_name', 'to_email', 'from_name', 'subject'];
+            const missingParams = requiredParams.filter(param => !templateParams[param]);
+            if (missingParams.length > 0) {
+                console.error('❌ [DEBUG] Parâmetros obrigatórios faltando:', missingParams);
+                throw new Error('❌ Parâmetros obrigatórios faltando: ' + missingParams.join(', '));
+            }
+            
             // Enviar email via EmailJS (com fallback para template do contrato)
             return emailjs.send(
                 CONFIG_EMAILJS.serviceId,
                 CONFIG_EMAILJS.templateId,
                 templateParams
-            ).catch(error => {
-                // Se template do briefing não existir, usar template do contrato como fallback
-                if (error.text && error.text.includes('template_z16zup7')) {
-                    console.log('⚠️ Template briefing não encontrado, usando template do contrato...');
+            ).then(response => {
+                console.log('✅ [DEBUG] Email enviado com sucesso:', response);
+                return response;
+            }).catch(error => {
+                console.error('❌ [DEBUG] Erro detalhado do EmailJS:', error);
+                console.error('❌ [DEBUG] Status:', error.status);
+                console.error('❌ [DEBUG] Text:', error.text);
+                
+                // Análise específica do erro
+                if (error.status === 400) {
+                    console.error('❌ [DEBUG] Erro 400 - Bad Request. Possíveis causas:');
+                    console.error('- Template ID incorreto:', CONFIG_EMAILJS.templateId);
+                    console.error('- Service ID incorreto:', CONFIG_EMAILJS.serviceId);
+                    console.error('- Parâmetros incompatíveis com template');
+                    console.error('- Public Key incorreta:', CONFIG_EMAILJS.publicKey);
+                }
+                
+                // Se template do briefing não existir ou erro específico, usar template do contrato como fallback
+                if (error.text && (error.text.includes('template_z16zup7') || error.text.includes('template not found') || error.status === 400)) {
+                    console.log('⚠️ [DEBUG] Template briefing não encontrado ou erro 400, usando template do contrato...');
                     
                     // Adaptar parâmetros para template do contrato
                     const fallbackParams = {
@@ -2334,11 +2397,19 @@ Descrição: Breve descrição (opcional)
                         assinatura_prestador: 'Sistema de briefing'
                     };
                     
+                    console.log('🔍 [DEBUG] Tentando fallback com template do contrato:', fallbackParams);
+                    
                     return emailjs.send(
                         CONFIG_EMAILJS.serviceId,
                         'template_i076npw', // Template do contrato
                         fallbackParams
-                    );
+                    ).then(response => {
+                        console.log('✅ [DEBUG] Fallback enviado com sucesso:', response);
+                        return response;
+                    }).catch(fallbackError => {
+                        console.error('❌ [DEBUG] Erro no fallback também:', fallbackError);
+                        throw fallbackError;
+                    });
                 }
                 throw error; // Re-throw se for outro erro
             });
@@ -2487,6 +2558,91 @@ Descrição: Breve descrição (opcional)
 
             // Enviar via EmailJS
             enviarBriefingPorEmail();
+        }
+
+        // Função para testar conexão com EmailJS
+        async function testarConexaoEmailJS() {
+            console.log('🔍 [DEBUG] Testando conexão com EmailJS...');
+            
+            try {
+                // Verificar se EmailJS está carregado
+                if (typeof emailjs === 'undefined') {
+                    throw new Error('EmailJS não está carregado');
+                }
+
+                // Inicializar EmailJS
+                emailjs.init({
+                    publicKey: CONFIG_EMAILJS.publicKey,
+                });
+
+                // Parâmetros de teste mínimos
+                const testParams = {
+                    to_name: 'Teste',
+                    to_email: 'teste@example.com',
+                    from_name: 'Sistema',
+                    subject: 'Teste de Conexão',
+                    message: 'Teste de conexão com EmailJS'
+                };
+
+                console.log('🔍 [DEBUG] Enviando teste com parâmetros:', testParams);
+
+                // Tentar enviar um email de teste
+                const response = await emailjs.send(
+                    CONFIG_EMAILJS.serviceId,
+                    CONFIG_EMAILJS.templateId,
+                    testParams
+                );
+
+                console.log('✅ [DEBUG] Teste de conexão bem-sucedido:', response);
+                return { success: true, response };
+
+            } catch (error) {
+                console.error('❌ [DEBUG] Erro no teste de conexão:', error);
+                return { success: false, error };
+            }
+        }
+
+        // Função para diagnosticar problemas
+        function diagnosticarProblemas() {
+            console.log('🔍 [DEBUG] === DIAGNÓSTICO COMPLETO ===');
+            
+            // 1. Verificar se EmailJS está carregado
+            console.log('1. EmailJS carregado:', typeof emailjs !== 'undefined');
+            
+            // 2. Verificar configuração
+            console.log('2. Configuração:', CONFIG_EMAILJS);
+            
+            // 3. Verificar dados do briefing
+            console.log('3. Dados do briefing (quantidade):', Object.keys(briefingData).length);
+            console.log('3. Dados principais:', {
+                nome: briefingData.nomeArtistico,
+                email: briefingData.emailOrcamento,
+                area: briefingData.areaAtuacao
+            });
+            
+            // 4. Verificar conexão com internet
+            console.log('4. Online:', navigator.onLine);
+            
+            // 5. Testar conexão com EmailJS
+            testarConexaoEmailJS().then(result => {
+                if (result.success) {
+                    console.log('✅ [DEBUG] Conexão com EmailJS: OK');
+                    showAlert('Conexão com EmailJS testada com sucesso!', 'Teste bem-sucedido', 'success');
+                } else {
+                    console.error('❌ [DEBUG] Conexão com EmailJS: FALHOU');
+                    console.error('❌ [DEBUG] Erro:', result.error);
+                    
+                    let errorMessage = 'Erro na conexão com EmailJS:\n';
+                    if (result.error.status) {
+                        errorMessage += `Status: ${result.error.status}\n`;
+                    }
+                    if (result.error.text) {
+                        errorMessage += `Detalhes: ${result.error.text}`;
+                    }
+                    
+                    showAlert(errorMessage, 'Erro de conexão', 'error');
+                }
+            });
         }
 
         function verificarStatusServicos() {
