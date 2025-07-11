@@ -47,8 +47,21 @@ Reply To: {{reply_to}}
 {{subject}}
 ```
 
-#### Body (HTML/Text):
-```html
+#### Body (HTML) - RECOMENDADO:
+1. **Copie todo o conteúdo** do arquivo `TEMPLATE_HTML_BRIEFING.html`
+2. **Cole no campo HTML** do template EmailJS
+3. **Mantenha as variáveis** {{to_name}}, {{from_name}}, etc.
+
+**Características do template HTML:**
+- 🎨 **Design profissional** com gradientes e cores modernas
+- 📱 **Responsivo** para desktop e mobile
+- 📧 **Call-to-action** com botão para responder
+- 🎬 **Temática audiovisual** com emojis e cores adequadas
+- 📋 **Formatação clara** dos dados do briefing
+- 👤 **Assinatura profissional** com seus dados
+
+#### Body (Text) - Alternativo simples:
+```
 Olá {{to_name}},
 
 Você recebeu um novo briefing de {{from_name}}!
@@ -74,6 +87,36 @@ Este email foi enviado automaticamente pelo sistema de briefing.
 | `subject` | Assunto do email | 🎬 Novo Briefing - Willian |
 | `message` | Conteúdo formatado do briefing | Dados completos do briefing |
 | `reply_to` | Email para resposta | contato@willian.com |
+| `data_briefing` | Data/hora do briefing | 15 de dezembro de 2024 às 14:30 |
+
+---
+
+## 🎨 Preview Visual do Template
+
+O template HTML criado oferece:
+
+### **Header Elegante**
+- Gradiente roxo/azul com título destacado
+- Ícone 🎬 representando audiovisual
+- Subtítulo identificando o sistema
+
+### **Conteúdo Estruturado**
+- Saudação personalizada com nome
+- Box destacado com informações do cliente
+- Área específica para detalhes do briefing (fonte monospace)
+- Call-to-action com botão para resposta
+
+### **Footer Profissional**
+- Seus dados de contato completos
+- Assinatura como desenvolvedor
+- Aviso sobre email automático
+
+### **Cores e Estilo**
+- **Primária**: #667eea (azul-roxo)
+- **Secundária**: #764ba2 (roxo)
+- **Texto**: #2c3e50 (azul escuro)
+- **Subtexto**: #64748b (cinza azulado)
+- **Backgrounds**: Gradientes sutis
 
 ---
 
@@ -90,7 +133,8 @@ Este email foi enviado automaticamente pelo sistema de briefing.
      "from_email": "teste@willian.com",
      "subject": "🎬 Teste Briefing - Willian",
      "message": "Teste de conteúdo do briefing...",
-     "reply_to": "teste@willian.com"
+     "reply_to": "teste@willian.com",
+     "data_briefing": "15 de dezembro de 2024 às 14:30"
    }
    ```
 4. Enviar teste
@@ -135,11 +179,25 @@ const templateParams = {
 ## 🔄 Próximos Passos
 
 1. ⏳ **Criar template** na dashboard do EmailJS
+   - Usar configurações da seção 3
+   - Copiar HTML do arquivo `TEMPLATE_HTML_BRIEFING.html`
+   - Configurar parâmetros da seção 5
+
 2. ✅ **Testar envio** com dados de exemplo  
+   - Usar JSON de teste da seção "🧪 Teste do Template"
+   - Verificar formatação do email recebido
+
 3. 🚀 **Ativar no briefing** e testar funcionamento
+   - Template criado = envio direto
+   - Template não criado = fallback automático
+
 4. 📧 **Verificar emails** chegando corretamente
+   - Verificar inbox e spam
+   - Testar botão "Responder Cliente"
 
 ---
 
-**Status**: Template configurado no código ✅  
-**Pendente**: Criação na dashboard do EmailJS ⏳ 
+**Status**: 
+- ✅ Template configurado no código  
+- ✅ Template HTML profissional criado
+- ⏳ Criação na dashboard do EmailJS pendente 

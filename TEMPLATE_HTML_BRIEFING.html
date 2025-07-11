@@ -1,0 +1,67 @@
+<div style="font-family: system-ui, sans-serif, Arial; font-size: 16px; max-width: 600px; margin: 0 auto; background: #ffffff;">
+  <!-- Header com logo -->
+  <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 24px; text-align: center; border-radius: 8px 8px 0 0;">
+    <h1 style="color: #ffffff; margin: 0; font-size: 24px; font-weight: 700;">
+      🎬 Novo Briefing Recebido
+    </h1>
+    <p style="color: rgba(255,255,255,0.9); margin: 8px 0 0 0; font-size: 14px;">
+      Sistema de Portfólio Audiovisual
+    </p>
+  </div>
+
+  <!-- Conteúdo principal -->
+  <div style="padding: 32px 24px; background: #ffffff;">
+    <p style="margin: 0 0 20px 0; font-size: 18px; color: #2c3e50;">
+      Olá <strong>{{to_name}}</strong>,
+    </p>
+    
+    <p style="margin: 0 0 24px 0; line-height: 1.6; color: #64748b;">
+      Você recebeu um novo briefing de <strong>{{from_name}}</strong> para desenvolvimento de portfólio audiovisual!
+    </p>
+
+    <!-- Informações do cliente -->
+    <div style="background: #f8fafc; border-left: 4px solid #667eea; padding: 20px; margin: 24px 0; border-radius: 0 8px 8px 0;">
+      <h3 style="margin: 0 0 12px 0; color: #2c3e50; font-size: 16px;">
+        📋 Informações do Cliente:
+      </h3>
+             <p style="margin: 0; color: #64748b; line-height: 1.5;">
+         <strong>Email:</strong> {{from_email}}<br>
+         <strong>Data:</strong> {{data_briefing}}
+       </p>
+    </div>
+
+    <!-- Detalhes do briefing -->
+    <div style="margin: 24px 0;">
+      <h3 style="margin: 0 0 16px 0; color: #2c3e50; font-size: 18px; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px;">
+        📝 Detalhes Completos do Briefing:
+      </h3>
+      <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px; white-space: pre-line; font-family: 'Courier New', monospace; font-size: 14px; line-height: 1.6; color: #374151;">{{message}}</div>
+    </div>
+
+    <!-- Call to action -->
+    <div style="text-align: center; margin: 32px 0; padding: 24px; background: linear-gradient(135deg, #f0f4ff 0%, #e0e7ff 100%); border-radius: 8px;">
+      <h3 style="margin: 0 0 12px 0; color: #667eea; font-size: 16px;">
+        🚀 Próximos Passos:
+      </h3>
+      <p style="margin: 0 0 16px 0; color: #64748b; line-height: 1.5;">
+        Entre em contato com o cliente em até 24 horas para alinhar os detalhes e iniciar o projeto.
+      </p>
+      <a href="mailto:{{from_email}}" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #ffffff; text-decoration: none; padding: 12px 24px; border-radius: 8px; font-weight: 600; font-size: 14px;">
+        📧 Responder Cliente
+      </a>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div style="background: #f8fafc; padding: 20px 24px; border-top: 1px solid #e2e8f0; text-align: center; border-radius: 0 0 8px 8px;">
+    <p style="margin: 0 0 8px 0; color: #64748b; font-size: 14px;">
+      <strong>Rodrigo Rocha Giuntini</strong><br>
+      Desenvolvedor Full Stack
+    </p>
+    <p style="margin: 0; color: #94a3b8; font-size: 13px; line-height: 1.4;">
+      📧 rodrigorochagiuntini@bityx.app<br>
+      📱 (11) 99144-9842<br>
+      <em>Este email foi enviado automaticamente pelo sistema de briefing.</em>
+    </p>
+  </div>
+</div> 

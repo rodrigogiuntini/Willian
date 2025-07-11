@@ -2254,6 +2254,14 @@ Descrição: Breve descrição (opcional)
             
             // Preparar dados formatados para email
             const dadosFormatados = formatarDadosParaEmail();
+            const dataAtual = new Date().toLocaleDateString('pt-BR', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            
             const templateParams = {
                 to_name: 'Rodrigo Rocha Giuntini',
                 to_email: 'rodrigorochagiuntini@bityx.app',
@@ -2261,7 +2269,8 @@ Descrição: Breve descrição (opcional)
                 from_email: briefingData.emailOrcamento || 'Não informado',
                 subject: '🎬 Novo Briefing - ' + (briefingData.nomeArtistico || 'Willian'),
                 message: dadosFormatados,
-                reply_to: briefingData.emailOrcamento || 'rodrigorochagiuntini@bityx.app'
+                reply_to: briefingData.emailOrcamento || 'rodrigorochagiuntini@bityx.app',
+                data_briefing: dataAtual
             };
 
             // Enviar email via EmailJS (com fallback para template do contrato)
