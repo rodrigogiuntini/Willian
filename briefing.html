@@ -1619,8 +1619,11 @@ Descrição: Breve descrição (opcional)
                                             <button type="button" onclick="console.log('Configuração EmailJS:', CONFIG_EMAILJS)" style="background: #17a2b8; color: white; border: none; padding: 8px 12px; border-radius: 4px; font-size: 0.8em; cursor: pointer;">
                                                 ⚙️ Ver Config
                                             </button>
-                                            <button type="button" onclick="mostrarGuiaTemplate()" style="background: #28a745; color: white; border: none; padding: 8px 12px; border-radius: 4px; font-size: 0.8em; cursor: pointer; grid-column: 1 / -1;">
+                                            <button type="button" onclick="mostrarGuiaTemplate()" style="background: #28a745; color: white; border: none; padding: 8px 12px; border-radius: 4px; font-size: 0.8em; cursor: pointer;">
                                                 📝 Como Criar Template
+                                            </button>
+                                            <button type="button" onclick="enviarComFallback()" style="background: #fd7e14; color: white; border: none; padding: 8px 12px; border-radius: 4px; font-size: 0.8em; cursor: pointer;">
+                                                🔄 Forçar Fallback
                                             </button>
                                         </div>
                                         <p style="margin: 8px 0 0 0; font-size: 0.75em; color: #6c757d;">
@@ -2383,64 +2386,57 @@ Descrição: Breve descrição (opcional)
                 throw new Error('❌ Parâmetros obrigatórios faltando: ' + missingParams.join(', '));
             }
             
-            // Enviar email via EmailJS (com fallback para template do contrato)
-            return emailjs.send(
-                CONFIG_EMAILJS.serviceId,
-                CONFIG_EMAILJS.templateId,
-                templateParams
-            ).then(response => {
-                console.log('✅ [DEBUG] Email enviado com sucesso:', response);
+            // TENTATIVA 1: Usar template específico do briefing
+            console.log('🔍 [DEBUG] TENTATIVA 1: Template específico do briefing');
+            
+            try {
+                const response = await emailjs.send(
+                    CONFIG_EMAILJS.serviceId,
+                    CONFIG_EMAILJS.templateId,
+                    templateParams
+                );
+                console.log('✅ [DEBUG] SUCESSO: Email enviado com template específico:', response);
                 return response;
-            }).catch(error => {
-                console.error('❌ [DEBUG] Erro detalhado do EmailJS:', error);
+                
+            } catch (error) {
+                console.error('❌ [DEBUG] FALHA na tentativa 1:', error);
                 console.error('❌ [DEBUG] Status:', error.status);
                 console.error('❌ [DEBUG] Text:', error.text);
                 
-                // Análise específica do erro
-                if (error.status === 400) {
-                    console.error('❌ [DEBUG] Erro 400 - Bad Request. Possíveis causas:');
-                    console.error('- Template ID incorreto:', CONFIG_EMAILJS.templateId);
-                    console.error('- Service ID incorreto:', CONFIG_EMAILJS.serviceId);
-                    console.error('- Parâmetros incompatíveis com template');
-                    console.error('- Public Key incorreta:', CONFIG_EMAILJS.publicKey);
-                }
+                // TENTATIVA 2: Fallback automático para template do contrato
+                console.log('🔄 [DEBUG] TENTATIVA 2: Fallback para template do contrato');
                 
-                // Se template do briefing não existir ou erro específico, usar template do contrato como fallback
-                if (error.text && (error.text.includes('template_z16zup7') || error.text.includes('template not found') || error.text.includes('The template ID not found') || error.status === 400)) {
-                    console.log('⚠️ [DEBUG] Template briefing não encontrado ou erro 400, usando template do contrato...');
-                    console.log('⚠️ [DEBUG] Erro específico:', error.text);
-                    
-                    // Adaptar parâmetros para template do contrato
-                    const fallbackParams = {
-                        to_email: 'rodrigorochagiuntini@bityx.app',
-                        subject: '🎬 Novo Briefing - ' + (briefingData.nomeArtistico || 'Willian'),
-                        cliente_nome: briefingData.nomeArtistico || 'Willian',
-                        cliente_email: briefingData.emailOrcamento || 'Não informado',
-                        cliente_telefone: briefingData.whatsapp || 'Não informado',
-                        data_contrato: new Date().toLocaleDateString('pt-BR'),
-                        message: dadosFormatados,
-                        assinatura_cliente: 'Briefing automatizado',
-                        assinatura_prestador: 'Sistema de briefing'
-                    };
-                    
-                    console.log('🔍 [DEBUG] Tentando fallback com template do contrato:', fallbackParams);
-                    
-                    return emailjs.send(
+                // Adaptar parâmetros para template do contrato
+                const fallbackParams = {
+                    to_email: 'rodrigorochagiuntini@bityx.app',
+                    subject: '🎬 Novo Briefing - ' + (briefingData.nomeArtistico || 'Willian'),
+                    cliente_nome: briefingData.nomeArtistico || 'Willian',
+                    cliente_email: briefingData.emailOrcamento || 'Não informado',
+                    cliente_telefone: briefingData.whatsapp || 'Não informado',
+                    data_contrato: new Date().toLocaleDateString('pt-BR'),
+                    message: dadosFormatados,
+                    assinatura_cliente: 'Briefing automatizado',
+                    assinatura_prestador: 'Sistema de briefing'
+                };
+                
+                console.log('🔍 [DEBUG] Parâmetros do fallback:', fallbackParams);
+                
+                try {
+                    const fallbackResponse = await emailjs.send(
                         CONFIG_EMAILJS.serviceId,
                         'template_i076npw', // Template do contrato
                         fallbackParams
-                    ).then(response => {
-                        console.log('✅ [DEBUG] Fallback enviado com sucesso:', response);
-                        // Marcar que foi enviado via fallback
-                        response.fallback = true;
-                        return response;
-                    }).catch(fallbackError => {
-                        console.error('❌ [DEBUG] Erro no fallback também:', fallbackError);
-                        throw fallbackError;
-                    });
+                    );
+                    console.log('✅ [DEBUG] SUCESSO: Fallback enviado com sucesso:', fallbackResponse);
+                    // Marcar que foi enviado via fallback
+                    fallbackResponse.fallback = true;
+                    return fallbackResponse;
+                    
+                } catch (fallbackError) {
+                    console.error('❌ [DEBUG] FALHA: Erro no fallback também:', fallbackError);
+                    throw fallbackError;
                 }
-                throw error; // Re-throw se for outro erro
-            });
+            }
         }
 
 
@@ -2579,8 +2575,8 @@ Descrição: Breve descrição (opcional)
             showModal({
                 type: 'info',
                 icon: '📧',
-                title: 'Enviando teste...',
-                message: 'Testando o envio do briefing por email. Aguarde um momento.',
+                title: 'Testando envio...',
+                message: 'Tentando enviar com template específico. Se falhar, usará fallback automático.',
                 buttons: [] // Sem botões para simular loading
             });
 
@@ -2673,6 +2669,77 @@ Descrição: Breve descrição (opcional)
             });
         }
 
+        // Função para enviar diretamente com fallback
+        async function enviarComFallback() {
+            if (Object.keys(briefingData).length === 0) {
+                showAlert('Preencha pelo menos uma pergunta antes de enviar.', 'Dados insuficientes', 'warning');
+                return;
+            }
+
+            // Mostrar modal de loading
+            showModal({
+                type: 'info',
+                icon: '🔄',
+                title: 'Enviando via fallback...',
+                message: 'Enviando briefing usando template do contrato (método garantido).',
+                buttons: []
+            });
+
+            try {
+                // Preparar dados formatados para email
+                const dadosFormatados = formatarDadosParaEmail();
+                
+                // Inicializar EmailJS
+                emailjs.init({ publicKey: CONFIG_EMAILJS.publicKey });
+                
+                // Adaptar parâmetros para template do contrato
+                const fallbackParams = {
+                    to_email: 'rodrigorochagiuntini@bityx.app',
+                    subject: '🎬 Novo Briefing - ' + (briefingData.nomeArtistico || 'Willian'),
+                    cliente_nome: briefingData.nomeArtistico || 'Willian',
+                    cliente_email: briefingData.emailOrcamento || 'Não informado',
+                    cliente_telefone: briefingData.whatsapp || 'Não informado',
+                    data_contrato: new Date().toLocaleDateString('pt-BR'),
+                    message: dadosFormatados,
+                    assinatura_cliente: 'Briefing automatizado',
+                    assinatura_prestador: 'Sistema de briefing'
+                };
+                
+                console.log('🔄 [DEBUG] Enviando diretamente com fallback:', fallbackParams);
+                
+                const response = await emailjs.send(
+                    CONFIG_EMAILJS.serviceId,
+                    'template_i076npw', // Template do contrato
+                    fallbackParams
+                );
+                
+                console.log('✅ [DEBUG] Fallback direto enviado com sucesso:', response);
+                
+                hideModal();
+                showModal({
+                    type: 'success',
+                    icon: '✅',
+                    title: 'Briefing enviado via fallback!',
+                    message: 'Seu briefing foi enviado com sucesso usando o template do contrato. O Rodrigo receberá todos os dados normalmente.',
+                    buttons: [{text: 'Perfeito', action: 'close', style: 'success'}]
+                });
+                
+            } catch (error) {
+                console.error('❌ [DEBUG] Erro no fallback direto:', error);
+                hideModal();
+                showModal({
+                    type: 'error',
+                    icon: '❌',
+                    title: 'Erro no fallback',
+                    message: 'Não foi possível enviar nem pelo método de fallback. Verifique sua conexão e tente novamente.',
+                    buttons: [
+                        {text: 'Baixar Briefing', action: () => { downloadBriefing(); hideModal(); }, style: 'primary'},
+                        {text: 'OK', action: 'close', style: 'secondary'}
+                    ]
+                });
+            }
+        }
+
         // Função para mostrar guia de criação do template
         function mostrarGuiaTemplate() {
             showModal({
@@ -2702,7 +2769,7 @@ Enquanto isso, o sistema usará o template do contrato automaticamente.`,
                         hideModal(); 
                     }, style: 'primary'},
                     {text: 'Usar Fallback', action: () => { 
-                        enviarBriefingPorEmail(); 
+                        enviarComFallback(); 
                         hideModal(); 
                     }, style: 'secondary'}
                 ]
