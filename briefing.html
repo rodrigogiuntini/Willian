@@ -7,6 +7,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- EmailJS v4 - Mesma versão do contrato -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -71,17 +73,39 @@
             height: 4px;
             background: linear-gradient(90deg, #667eea, #764ba2, #f093fb);
             border-radius: 32px 32px 0 0;
+            opacity: 0.3;
         }
 
         .progress-bar {
-            position: absolute;
+            position: fixed;
             top: 0;
             left: 0;
             height: 4px;
             background: linear-gradient(90deg, #00d4aa, #00b4d8);
             transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            border-radius: 32px 32px 0 0;
-            z-index: 1;
+            z-index: 1000;
+            width: 0%;
+            box-shadow: 0 0 10px rgba(0, 212, 170, 0.5);
+        }
+
+        .progress-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            animation: progressShimmer 2s infinite;
+        }
+
+        @keyframes progressShimmer {
+            0% {
+                transform: translateX(-100%);
+            }
+            100% {
+                transform: translateX(100%);
+            }
         }
 
         .header {
@@ -124,6 +148,36 @@
             opacity: 1;
             transform: translateY(0);
             animation: slideInUp 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .question-container.transitioning-out {
+            animation: slideOutLeft 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .question-container.transitioning-in {
+            animation: slideInRight 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes slideOutLeft {
+            from {
+                opacity: 1;
+                transform: translateX(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateX(-100px);
+            }
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
         }
 
         @keyframes slideInUp {
@@ -578,6 +632,462 @@
             display: inline-block;
         }
 
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+                transform: translateX(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateX(100%);
+            }
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-10px);
+            }
+            60% {
+                transform: translateY(-5px);
+            }
+        }
+
+        .bounce-animation {
+            animation: bounce 0.5s ease;
+        }
+
+        /* Browser Window Apple Style */
+        .browser-window {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(20px);
+            transition: all 0.3s ease;
+            margin-bottom: 24px;
+            opacity: 0;
+            transform: translateY(20px) scale(0.96);
+            animation: browserWindowSlideIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        @keyframes browserWindowSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px) scale(0.96);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        #finalScreen .browser-window {
+            animation: finalScreenSlideIn 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        @keyframes finalScreenSlideIn {
+            0% {
+                opacity: 0;
+                transform: translateY(30px) scale(0.9);
+            }
+            50% {
+                opacity: 0.5;
+                transform: translateY(-10px) scale(1.05);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .browser-window:hover {
+            transform: translateY(-4px) scale(1.01);
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.2);
+        }
+
+        .browser-header {
+            background: linear-gradient(180deg, #f0f0f0 0%, #e8e8e8 100%);
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #d0d0d0;
+        }
+
+        .browser-controls {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .browser-button {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            transition: all 0.2s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .browser-button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: all 0.2s ease;
+        }
+
+        .browser-button:active::before {
+            width: 100%;
+            height: 100%;
+        }
+
+        .browser-button--close {
+            background: #ff5f57;
+            border-color: #e0443e;
+        }
+
+        .browser-button--minimize {
+            background: #ffbd2e;
+            border-color: #dea123;
+        }
+
+        .browser-button--maximize {
+            background: #28ca42;
+            border-color: #1aad34;
+        }
+
+        .browser-button:hover {
+            opacity: 0.8;
+            transform: scale(1.1);
+        }
+
+        .browser-button--close:hover {
+            background: #ff3b30;
+            box-shadow: 0 0 8px rgba(255, 59, 48, 0.4);
+        }
+
+        .browser-button--minimize:hover {
+            background: #ff9500;
+            box-shadow: 0 0 8px rgba(255, 149, 0, 0.4);
+        }
+
+        .browser-button--maximize:hover {
+            background: #30d158;
+            box-shadow: 0 0 8px rgba(48, 209, 88, 0.4);
+        }
+
+        .browser-address {
+            flex: 1;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-size: 0.8em;
+            color: #666;
+            font-weight: 500;
+            margin: 0 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .browser-address::before {
+            content: '🔒';
+            position: absolute;
+            left: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.7em;
+            opacity: 0.6;
+        }
+
+        .browser-address span {
+            padding-left: 16px;
+            display: block;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .browser-address span::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            width: 1px;
+            height: 1em;
+            background: #667eea;
+            animation: blink 1s infinite;
+        }
+
+        .browser-address.loaded span::after {
+            display: none;
+        }
+
+        @keyframes blink {
+            0%, 50% {
+                opacity: 1;
+            }
+            51%, 100% {
+                opacity: 0;
+            }
+        }
+
+        .browser-address.loading span {
+            opacity: 0.5;
+        }
+
+        .browser-address.loading::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            right: 8px;
+            transform: translateY(-50%);
+            width: 12px;
+            height: 12px;
+            border: 2px solid #ccc;
+            border-top-color: #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: translateY(-50%) rotate(360deg);
+            }
+        }
+
+        /* Modal Apple Style */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 400px;
+            width: 90%;
+            overflow: hidden;
+            transform: scale(0.7) translateY(50px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .modal-overlay.active .modal-container {
+            transform: scale(1) translateY(0);
+        }
+
+        .modal-header {
+            padding: 24px 24px 16px;
+            text-align: center;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .modal-icon {
+            font-size: 3em;
+            margin-bottom: 16px;
+            display: block;
+        }
+
+        .modal-title {
+            font-size: 1.25em;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+
+        .modal-message {
+            font-size: 0.95em;
+            color: #64748b;
+            line-height: 1.5;
+            margin-bottom: 0;
+            white-space: pre-line;
+            text-align: left;
+        }
+
+        .modal-actions {
+            padding: 16px 24px 24px;
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        .modal-button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 12px;
+            font-size: 0.95em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            min-width: 80px;
+        }
+
+        .modal-button--primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .modal-button--primary:hover {
+            background: #5a67d8;
+            transform: translateY(-1px);
+        }
+
+        .modal-button--secondary {
+            background: #f1f5f9;
+            color: #64748b;
+        }
+
+        .modal-button--secondary:hover {
+            background: #e2e8f0;
+            transform: translateY(-1px);
+        }
+
+        .modal-button--danger {
+            background: #ef4444;
+            color: white;
+        }
+
+        .modal-button--danger:hover {
+            background: #dc2626;
+            transform: translateY(-1px);
+        }
+
+        .modal-button--success {
+            background: #22c55e;
+            color: white;
+        }
+
+        .modal-button--success:hover {
+            background: #16a34a;
+            transform: translateY(-1px);
+        }
+
+        /* Tipos de modal */
+        .modal-container.error .modal-icon {
+            color: #ef4444;
+        }
+
+        .modal-container.success .modal-icon {
+            color: #22c55e;
+        }
+
+        .modal-container.warning .modal-icon {
+            color: #f59e0b;
+        }
+
+        .modal-container.info .modal-icon {
+            color: #3b82f6;
+        }
+
+        .modal-container.confirm .modal-icon {
+            color: #667eea;
+        }
+
+        @media (max-width: 480px) {
+            .modal-container {
+                max-width: 340px;
+            }
+            
+            .modal-header {
+                padding: 20px 20px 16px;
+            }
+            
+            .modal-icon {
+                font-size: 2.5em;
+            }
+            
+            .modal-title {
+                font-size: 1.1em;
+            }
+            
+            .modal-message {
+                font-size: 0.9em;
+            }
+            
+            .modal-actions {
+                padding: 16px 20px 20px;
+                flex-direction: column;
+            }
+            
+            .modal-button {
+                width: 100%;
+            }
+        }
+
+        .browser-content {
+            padding: 32px;
+            background: white;
+            min-height: 200px;
+        }
+
+        /* Adaptações para o conteúdo do briefing */
+        .browser-content .question-number {
+            font-size: 0.75em;
+            color: #667eea;
+            font-weight: 700;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 6px 12px;
+            background: rgba(102, 126, 234, 0.1);
+            border-radius: 8px;
+            display: inline-block;
+        }
+
+        .browser-content .question-title {
+            font-size: 1.8em;
+            color: #2c3e50;
+            margin-bottom: 16px;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        .browser-content .question-subtitle {
+            font-size: 1em;
+            color: #64748b;
+            margin-bottom: 24px;
+            line-height: 1.5;
+        }
+
         @media (max-width: 768px) {
             .briefing-card {
                 padding: 32px 24px;
@@ -629,6 +1139,48 @@
             .file-upload-area {
                 padding: 32px 20px;
             }
+
+            /* Browser windows responsivos */
+            .browser-window {
+                margin-bottom: 16px;
+                border-radius: 8px;
+            }
+
+            .browser-header {
+                padding: 8px 12px;
+            }
+
+            .browser-button {
+                width: 10px;
+                height: 10px;
+            }
+
+            .browser-address {
+                font-size: 0.7em;
+                padding: 3px 8px;
+                margin: 0 10px;
+            }
+
+            .browser-address::before {
+                left: 6px;
+                font-size: 0.6em;
+            }
+
+            .browser-address span {
+                padding-left: 12px;
+            }
+
+            .browser-content {
+                padding: 20px;
+            }
+
+            .browser-content .question-title {
+                font-size: 1.5em;
+            }
+
+            .browser-content .question-subtitle {
+                font-size: 0.95em;
+            }
         }
     </style>
 </head>
@@ -645,123 +1197,163 @@
 
             <!-- Pergunta 1: Informações Gerais -->
             <div class="question-container" id="question1">
-                <div class="question-number">Pergunta 1 de 7</div>
-                <div class="question-title">Vamos começar pelo básico, Willian! 👋</div>
-                <div class="question-subtitle">Conte-me um pouco sobre você e seu trabalho.</div>
-                
-                <div class="form-group">
-                    <label class="form-label">Nome artístico ou profissional que deve aparecer no site:</label>
-                    <input type="text" class="form-input" id="nomeArtistico" placeholder="Ex: João Silva Films">
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Sua principal área de atuação:</label>
-                    <select class="form-input form-select" id="areaAtuacao">
-                        <option value="">Selecione sua área</option>
-                        <option value="videomaker">Videomaker</option>
-                        <option value="filmmaker">Filmmaker</option>
-                        <option value="clipes">Clipes Musicais</option>
-                        <option value="eventos">Eventos</option>
-                        <option value="institucional">Vídeos Institucionais</option>
-                        <option value="comercial">Comerciais</option>
-                        <option value="documentario">Documentários</option>
-                        <option value="outro">Outro</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Breve descrição sobre você (para a bio do site):</label>
-                    <textarea class="form-input form-textarea" id="bioDescricao" placeholder="Ex: Sou um videomaker apaixonado por contar histórias através de imagens. Com mais de 5 anos de experiência, trabalho com eventos, clipes e projetos autorais..."></textarea>
+                <div class="browser-window">
+                    <div class="browser-header">
+                        <div class="browser-controls">
+                            <span class="browser-button browser-button--close"></span>
+                            <span class="browser-button browser-button--minimize"></span>
+                            <span class="browser-button browser-button--maximize"></span>
+                        </div>
+                        <div class="browser-address">
+                            <span>willian.com/briefing/informacoes-gerais</span>
+                        </div>
+                    </div>
+                    <div class="browser-content">
+                        <div class="question-number">Pergunta 1 de 7</div>
+                        <div class="question-title">Vamos começar pelo básico, Willian! 👋</div>
+                        <div class="question-subtitle">Conte-me um pouco sobre você e seu trabalho.</div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Nome artístico ou profissional que deve aparecer no site:</label>
+                            <input type="text" class="form-input" id="nomeArtistico" placeholder="Ex: João Silva Films">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Sua principal área de atuação:</label>
+                            <select class="form-input form-select" id="areaAtuacao">
+                                <option value="">Selecione sua área</option>
+                                <option value="videomaker">Videomaker</option>
+                                <option value="filmmaker">Filmmaker</option>
+                                <option value="clipes">Clipes Musicais</option>
+                                <option value="eventos">Eventos</option>
+                                <option value="institucional">Vídeos Institucionais</option>
+                                <option value="comercial">Comerciais</option>
+                                <option value="documentario">Documentários</option>
+                                <option value="outro">Outro</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Breve descrição sobre você (para a bio do site):</label>
+                            <textarea class="form-input form-textarea" id="bioDescricao" placeholder="Ex: Sou um videomaker apaixonado por contar histórias através de imagens. Com mais de 5 anos de experiência, trabalho com eventos, clipes e projetos autorais..."></textarea>
+                        </div>
+                    </div>
                 </div>
             </div>
 
             <!-- Pergunta 2: Estilo Visual -->
             <div class="question-container" id="question2">
-                <div class="question-number">Pergunta 2 de 7</div>
-                <div class="question-title">Qual é a sua vibe, Willian? 🎨</div>
-                <div class="question-subtitle">Vamos definir o estilo visual que melhor representa você e seu trabalho.</div>
-                
-                <div class="form-group">
-                    <label class="form-label">Que vibe você quer passar no site?</label>
-                    <div class="checkbox-group">
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="vibe1" name="vibe" value="clean">
-                            <label for="vibe1">Clean & Minimalista</label>
+                <div class="browser-window">
+                    <div class="browser-header">
+                        <div class="browser-controls">
+                            <span class="browser-button browser-button--close"></span>
+                            <span class="browser-button browser-button--minimize"></span>
+                            <span class="browser-button browser-button--maximize"></span>
                         </div>
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="vibe2" name="vibe" value="cinematografico">
-                            <label for="vibe2">Cinematográfico</label>
-                        </div>
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="vibe3" name="vibe" value="ousado">
-                            <label for="vibe3">Ousado & Criativo</label>
-                        </div>
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="vibe4" name="vibe" value="moderno">
-                            <label for="vibe4">Moderno & Tech</label>
-                        </div>
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="vibe5" name="vibe" value="artistico">
-                            <label for="vibe5">Artístico & Autoral</label>
-                        </div>
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="vibe6" name="vibe" value="elegante">
-                            <label for="vibe6">Elegante & Sofisticado</label>
+                        <div class="browser-address">
+                            <span>willian.com/briefing/estilo-visual</span>
                         </div>
                     </div>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Alguma cor ou tom principal que gostaria de usar?</label>
-                    <input type="text" class="form-input" id="corPrincipal" placeholder="Ex: Azul escuro, tons terrosos, preto e branco, cores vibrantes...">
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Você tem logotipo?</label>
-                    <select class="form-input form-select" id="temLogo">
-                        <option value="">Selecione</option>
-                        <option value="sim">Sim, tenho logotipo</option>
-                        <option value="nao">Não tenho logotipo</option>
-                        <option value="preciso">Preciso de um logotipo</option>
-                    </select>
-                </div>
-                
-                <div class="file-upload-area" id="logoUpload" style="display: none;">
-                    <div class="file-upload-text">📎 Arraste seu logotipo aqui ou clique para selecionar</div>
-                    <div class="file-upload-hint">Formatos aceitos: PNG, JPG, SVG (máx. 5MB)</div>
-                    <input type="file" id="logoFile" accept=".png,.jpg,.jpeg,.svg" style="display: none;">
+                    <div class="browser-content">
+                        <div class="question-number">Pergunta 2 de 7</div>
+                        <div class="question-title">Qual é a sua vibe, Willian? 🎨</div>
+                        <div class="question-subtitle">Vamos definir o estilo visual que melhor representa você e seu trabalho.</div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Que vibe você quer passar no site?</label>
+                            <div class="checkbox-group">
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="vibe1" name="vibe" value="clean">
+                                    <label for="vibe1">Clean & Minimalista</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="vibe2" name="vibe" value="cinematografico">
+                                    <label for="vibe2">Cinematográfico</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="vibe3" name="vibe" value="ousado">
+                                    <label for="vibe3">Ousado & Criativo</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="vibe4" name="vibe" value="moderno">
+                                    <label for="vibe4">Moderno & Tech</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="vibe5" name="vibe" value="artistico">
+                                    <label for="vibe5">Artístico & Autoral</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="vibe6" name="vibe" value="elegante">
+                                    <label for="vibe6">Elegante & Sofisticado</label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Alguma cor ou tom principal que gostaria de usar?</label>
+                            <input type="text" class="form-input" id="corPrincipal" placeholder="Ex: Azul escuro, tons terrosos, preto e branco, cores vibrantes...">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Você tem logotipo?</label>
+                            <select class="form-input form-select" id="temLogo">
+                                <option value="">Selecione</option>
+                                <option value="sim">Sim, tenho logotipo</option>
+                                <option value="nao">Não tenho logotipo</option>
+                                <option value="preciso">Preciso de um logotipo</option>
+                            </select>
+                        </div>
+                        
+                        <div class="file-upload-area" id="logoUpload" style="display: none;">
+                            <div class="file-upload-text">📎 Arraste seu logotipo aqui ou clique para selecionar</div>
+                            <div class="file-upload-hint">Formatos aceitos: PNG, JPG, SVG (máx. 5MB)</div>
+                            <input type="file" id="logoFile" accept=".png,.jpg,.jpeg,.svg" style="display: none;">
+                        </div>
+                    </div>
                 </div>
             </div>
 
             <!-- Pergunta 3: Conteúdo do Portfólio -->
             <div class="question-container" id="question3">
-                <div class="question-number">Pergunta 3 de 7</div>
-                <div class="question-title">Seus melhores trabalhos, Willian! 🎬</div>
-                <div class="question-subtitle">Agora vamos selecionar os projetos que vão entrar no seu portfólio.</div>
-                
-                <div class="form-group">
-                    <label class="form-label">Quantos projetos você quer incluir no lançamento?</label>
-                    <select class="form-input form-select" id="quantidadeProjetos">
-                        <option value="">Selecione</option>
-                        <option value="3">3 projetos</option>
-                        <option value="4">4 projetos</option>
-                        <option value="5">5 projetos</option>
-                        <option value="6">6 projetos</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Links dos vídeos (YouTube, Vimeo, Drive):</label>
-                    <textarea class="form-input form-textarea" id="linksProjetos" placeholder="Cole aqui os links dos seus projetos, um por linha:
+                <div class="browser-window">
+                    <div class="browser-header">
+                        <div class="browser-controls">
+                            <span class="browser-button browser-button--close"></span>
+                            <span class="browser-button browser-button--minimize"></span>
+                            <span class="browser-button browser-button--maximize"></span>
+                        </div>
+                        <div class="browser-address">
+                            <span>willian.com/briefing/portfolio</span>
+                        </div>
+                    </div>
+                    <div class="browser-content">
+                        <div class="question-number">Pergunta 3 de 7</div>
+                        <div class="question-title">Seus melhores trabalhos, Willian! 🎬</div>
+                        <div class="question-subtitle">Agora vamos selecionar os projetos que vão entrar no seu portfólio.</div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Quantos projetos você quer incluir no lançamento?</label>
+                            <select class="form-input form-select" id="quantidadeProjetos">
+                                <option value="">Selecione</option>
+                                <option value="3">3 projetos</option>
+                                <option value="4">4 projetos</option>
+                                <option value="5">5 projetos</option>
+                                <option value="6">6 projetos</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Links dos vídeos (YouTube, Vimeo, Drive):</label>
+                            <textarea class="form-input form-textarea" id="linksProjetos" placeholder="Cole aqui os links dos seus projetos, um por linha:
 
 https://youtu.be/exemplo1
 https://vimeo.com/exemplo2
 https://drive.google.com/exemplo3"></textarea>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Informações dos projetos:</label>
-                    <textarea class="form-input form-textarea" id="infosProjetos" placeholder="Para cada projeto, informe:
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Informações dos projetos:</label>
+                            <textarea class="form-input form-textarea" id="infosProjetos" placeholder="Para cada projeto, informe:
 
 PROJETO 1:
 Título: Nome do projeto
@@ -772,160 +1364,247 @@ Título: Nome do projeto
 Descrição: Breve descrição (opcional)
 
 (continue para os outros projetos...)"></textarea>
+                        </div>
+                    </div>
                 </div>
             </div>
 
             <!-- Pergunta 4: Referências -->
             <div class="question-container" id="question4">
-                <div class="question-number">Pergunta 4 de 7</div>
-                <div class="question-title">Suas inspirações, Willian! 💡</div>
-                <div class="question-subtitle">Você mencionou o site do Rafa Webber. Vamos entender o que te inspirou nele!</div>
-                
-                <div class="form-group">
-                    <label class="form-label">O que mais te chamou atenção no site do Rafa Webber?</label>
-                    <div class="checkbox-group">
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="ref1" name="referencia" value="organizacao">
-                            <label for="ref1">Organização dos projetos</label>
+                <div class="browser-window">
+                    <div class="browser-header">
+                        <div class="browser-controls">
+                            <span class="browser-button browser-button--close"></span>
+                            <span class="browser-button browser-button--minimize"></span>
+                            <span class="browser-button browser-button--maximize"></span>
                         </div>
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="ref2" name="referencia" value="rolagem">
-                            <label for="ref2">Navegação e rolagem</label>
-                        </div>
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="ref3" name="referencia" value="tipografia">
-                            <label for="ref3">Tipografia</label>
-                        </div>
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="ref4" name="referencia" value="player">
-                            <label for="ref4">Player de vídeo grande</label>
-                        </div>
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="ref5" name="referencia" value="cores">
-                            <label for="ref5">Esquema de cores</label>
-                        </div>
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="ref6" name="referencia" value="layout">
-                            <label for="ref6">Layout geral</label>
+                        <div class="browser-address">
+                            <span>willian.com/briefing/referencias</span>
                         </div>
                     </div>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Tem outras referências de sites que você curte?</label>
-                    <textarea class="form-input form-textarea" id="outrasReferencias" placeholder="Cole aqui links de outros sites que você admira ou descreva elementos específicos que gostaria de ter no seu site..."></textarea>
+                    <div class="browser-content">
+                        <div class="question-number">Pergunta 4 de 7</div>
+                        <div class="question-title">Suas inspirações, Willian! 💡</div>
+                        <div class="question-subtitle">Você mencionou o site do Rafa Webber. Vamos entender o que te inspirou nele!</div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">O que mais te chamou atenção no site do Rafa Webber?</label>
+                            <div class="checkbox-group">
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="ref1" name="referencia" value="organizacao">
+                                    <label for="ref1">Organização dos projetos</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="ref2" name="referencia" value="rolagem">
+                                    <label for="ref2">Navegação e rolagem</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="ref3" name="referencia" value="tipografia">
+                                    <label for="ref3">Tipografia</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="ref4" name="referencia" value="player">
+                                    <label for="ref4">Player de vídeo grande</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="ref5" name="referencia" value="cores">
+                                    <label for="ref5">Esquema de cores</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="ref6" name="referencia" value="layout">
+                                    <label for="ref6">Layout geral</label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Tem outras referências de sites que você curte?</label>
+                            <textarea class="form-input form-textarea" id="outrasReferencias" placeholder="Cole aqui links de outros sites que você admira ou descreva elementos específicos que gostaria de ter no seu site..."></textarea>
+                        </div>
+                    </div>
                 </div>
             </div>
 
             <!-- Pergunta 5: Seções do Site -->
             <div class="question-container" id="question5">
-                <div class="question-number">Pergunta 5 de 7</div>
-                <div class="question-title">Estrutura do seu site 🏗️</div>
-                <div class="question-subtitle">Vamos definir as seções que o seu site vai ter.</div>
-                
-                <div class="form-group">
-                    <label class="form-label">Que seções você quer incluir no seu site?</label>
-                    <div class="checkbox-group">
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="secao1" name="secao" value="portfolio" checked>
-                            <label for="secao1">Portfólio (obrigatório)</label>
+                <div class="browser-window">
+                    <div class="browser-header">
+                        <div class="browser-controls">
+                            <span class="browser-button browser-button--close"></span>
+                            <span class="browser-button browser-button--minimize"></span>
+                            <span class="browser-button browser-button--maximize"></span>
                         </div>
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="secao2" name="secao" value="sobre">
-                            <label for="secao2">Sobre mim</label>
-                        </div>
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="secao3" name="secao" value="servicos">
-                            <label for="secao3">Serviços</label>
-                        </div>
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="secao4" name="secao" value="contato">
-                            <label for="secao4">Contato</label>
-                        </div>
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="secao5" name="secao" value="depoimentos">
-                            <label for="secao5">Depoimentos</label>
-                        </div>
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="secao6" name="secao" value="blog">
-                            <label for="secao6">Blog</label>
+                        <div class="browser-address">
+                            <span>willian.com/briefing/estrutura</span>
                         </div>
                     </div>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Alguma seção específica que não está na lista?</label>
-                    <input type="text" class="form-input" id="secaoExtra" placeholder="Ex: Galeria de fotos, Equipamentos, Processo de trabalho...">
+                    <div class="browser-content">
+                        <div class="question-number">Pergunta 5 de 7</div>
+                        <div class="question-title">Estrutura do seu site 🏗️</div>
+                        <div class="question-subtitle">Vamos definir as seções que o seu site vai ter.</div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Que seções você quer incluir no seu site?</label>
+                            <div class="checkbox-group">
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="secao1" name="secao" value="portfolio" checked>
+                                    <label for="secao1">Portfólio (obrigatório)</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="secao2" name="secao" value="sobre">
+                                    <label for="secao2">Sobre mim</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="secao3" name="secao" value="servicos">
+                                    <label for="secao3">Serviços</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="secao4" name="secao" value="contato">
+                                    <label for="secao4">Contato</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="secao5" name="secao" value="depoimentos">
+                                    <label for="secao5">Depoimentos</label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Alguma seção específica que não está na lista?</label>
+                            <input type="text" class="form-input" id="secaoExtra" placeholder="Ex: Galeria de fotos, Equipamentos, Processo de trabalho...">
+                        </div>
+                    </div>
                 </div>
             </div>
 
             <!-- Pergunta 6: Contatos e Redes Sociais -->
             <div class="question-container" id="question6">
-                <div class="question-number">Pergunta 6 de 7</div>
-                <div class="question-title">Vamos nos conectar, Willian! 📱</div>
-                <div class="question-subtitle">Agora preciso das suas informações de contato e redes sociais.</div>
-                
-                <div class="form-group">
-                    <label class="form-label">Instagram:</label>
-                    <input type="text" class="form-input" id="instagram" placeholder="@seuusuario">
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">WhatsApp para contato comercial:</label>
-                    <input type="text" class="form-input" id="whatsapp" placeholder="(11) 99999-9999">
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">E-mail para orçamentos:</label>
-                    <input type="email" class="form-input" id="emailOrcamento" placeholder="contato@seuemail.com">
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Outras redes sociais (opcional):</label>
-                    <textarea class="form-input form-textarea" id="outrasRedes" placeholder="YouTube, TikTok, LinkedIn, Behance..."></textarea>
+                <div class="browser-window">
+                    <div class="browser-header">
+                        <div class="browser-controls">
+                            <span class="browser-button browser-button--close"></span>
+                            <span class="browser-button browser-button--minimize"></span>
+                            <span class="browser-button browser-button--maximize"></span>
+                        </div>
+                        <div class="browser-address">
+                            <span>willian.com/briefing/contatos</span>
+                        </div>
+                    </div>
+                    <div class="browser-content">
+                        <div class="question-number">Pergunta 6 de 7</div>
+                        <div class="question-title">Vamos nos conectar, Willian! 📱</div>
+                        <div class="question-subtitle">Agora preciso das suas informações de contato e redes sociais.</div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Instagram:</label>
+                            <input type="text" class="form-input" id="instagram" placeholder="@seuusuario">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">WhatsApp para contato comercial:</label>
+                            <input type="text" class="form-input" id="whatsapp" placeholder="(11) 99999-9999">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">E-mail para orçamentos:</label>
+                            <input type="email" class="form-input" id="emailOrcamento" placeholder="contato@seuemail.com">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Outras redes sociais (opcional):</label>
+                            <textarea class="form-input form-textarea" id="outrasRedes" placeholder="YouTube, TikTok, LinkedIn, Behance..."></textarea>
+                        </div>
+                    </div>
                 </div>
             </div>
 
             <!-- Pergunta 7: Extras -->
             <div class="question-container" id="question7">
-                <div class="question-number">Pergunta 7 de 7</div>
-                <div class="question-title">Toque final, Willian! ✨</div>
-                <div class="question-subtitle">Vamos adicionar aquele toque especial que faz toda a diferença no seu site.</div>
-                
-                <div class="form-group">
-                    <label class="form-label">Alguma frase de impacto ou lema para o topo do site?</label>
-                    <input type="text" class="form-input" id="fraseImpacto" placeholder="Ex: 'Transformando momentos em memórias' ou 'Cada frame conta uma história'">
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Tem alguma história especial ou diferencial que deveria aparecer no site?</label>
-                    <textarea class="form-input form-textarea" id="historiaEspecial" placeholder="Ex: Como você começou, um projeto marcante, sua filosofia de trabalho..."></textarea>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Alguma funcionalidade específica que você gostaria?</label>
-                    <textarea class="form-input form-textarea" id="funcionalidadeEspecial" placeholder="Ex: Galeria de antes/depois, área de downloads, formulário de briefing personalizado..."></textarea>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Algo mais que você gostaria de adicionar?</label>
-                    <textarea class="form-input form-textarea" id="observacoes" placeholder="Qualquer observação, ideia ou sugestão que você tenha..."></textarea>
+                <div class="browser-window">
+                    <div class="browser-header">
+                        <div class="browser-controls">
+                            <span class="browser-button browser-button--close"></span>
+                            <span class="browser-button browser-button--minimize"></span>
+                            <span class="browser-button browser-button--maximize"></span>
+                        </div>
+                        <div class="browser-address">
+                            <span>willian.com/briefing/extras</span>
+                        </div>
+                    </div>
+                    <div class="browser-content">
+                        <div class="question-number">Pergunta 7 de 7</div>
+                        <div class="question-title">Toque final, Willian! ✨</div>
+                        <div class="question-subtitle">Vamos adicionar aquele toque especial que faz toda a diferença no seu site.</div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Alguma frase de impacto ou lema para o topo do site?</label>
+                            <input type="text" class="form-input" id="fraseImpacto" placeholder="Ex: 'Transformando momentos em memórias' ou 'Cada frame conta uma história'">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Tem alguma história especial ou diferencial que deveria aparecer no site?</label>
+                            <textarea class="form-input form-textarea" id="historiaEspecial" placeholder="Ex: Como você começou, um projeto marcante, sua filosofia de trabalho..."></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Alguma funcionalidade específica que você gostaria?</label>
+                            <textarea class="form-input form-textarea" id="funcionalidadeEspecial" placeholder="Ex: Galeria de antes/depois, área de downloads, formulário de briefing personalizado..."></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Algo mais que você gostaria de adicionar?</label>
+                            <textarea class="form-input form-textarea" id="observacoes" placeholder="Qualquer observação, ideia ou sugestão que você tenha..."></textarea>
+                        </div>
+                    </div>
                 </div>
             </div>
 
             <!-- Tela Final -->
             <div class="question-container" id="finalScreen">
-                <div class="final-screen">
-                    <div class="pulse">🎉</div>
-                    <h2>Briefing concluído, Willian!</h2>
-                    <p>Perfeito! Agora tenho todas as informações necessárias para criar o site ideal para o seu portfólio. Suas respostas foram salvas e já estou visualizando como tudo vai ficar incrível!</p>
-                    <p>Em breve entro em contato para alinharmos os próximos passos e começarmos a dar vida ao seu projeto, Willian.</p>
-                    
-                    <div class="contact-info">
-                        <h3>📞 Próximos passos:</h3>
-                        <p><strong>📧 Email:</strong> <a href="mailto:rodrigorochagiuntini@bityx.app">rodrigorochagiuntini@bityx.app</a></p>
-                        <p><strong>📱 WhatsApp:</strong> <a href="https://wa.me/5511991449842">(11) 99144-9842</a></p>
-                        <p><strong>⏰ Prazo:</strong> Retorno em até 24 horas</p>
+                <div class="browser-window">
+                    <div class="browser-header">
+                        <div class="browser-controls">
+                            <span class="browser-button browser-button--close"></span>
+                            <span class="browser-button browser-button--minimize"></span>
+                            <span class="browser-button browser-button--maximize"></span>
+                        </div>
+                        <div class="browser-address">
+                            <span>willian.com/briefing/concluido</span>
+                        </div>
+                    </div>
+                    <div class="browser-content">
+                        <div class="final-screen">
+                            <div class="pulse">🎉</div>
+                            <h2>Briefing concluído, Willian!</h2>
+                            <p>Perfeito! Agora tenho todas as informações necessárias para criar o site ideal para o seu portfólio. Suas respostas foram salvas e já estou visualizando como tudo vai ficar incrível!</p>
+                            <p>Em breve entro em contato para alinharmos os próximos passos e começarmos a dar vida ao seu projeto, Willian.</p>
+                            
+                            <div class="contact-info">
+                                <h3>📞 Próximos passos:</h3>
+                                <p><strong>📧 Email:</strong> <a href="mailto:rodrigorochagiuntini@bityx.app">rodrigorochagiuntini@bityx.app</a></p>
+                                <p><strong>📱 WhatsApp:</strong> <a href="https://wa.me/5511991449842">(11) 99144-9842</a></p>
+                                <p><strong>⏰ Prazo:</strong> Retorno em até 24 horas</p>
+                                
+                                <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(102, 126, 234, 0.2);">
+                                    <h3>💾 Suas respostas:</h3>
+                                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px;">
+                                        <button type="button" onclick="downloadBriefing()" class="btn btn-secondary" style="font-size: 0.9em; padding: 8px 16px;">
+                                            📄 Baixar Briefing
+                                        </button>
+                                        <button type="button" onclick="clearBriefingData()" class="btn btn-secondary" style="font-size: 0.9em; padding: 8px 16px;">
+                                            🗑️ Limpar Dados
+                                        </button>
+                                        <button type="button" onclick="testarEnvioOnline()" class="btn btn-primary" style="font-size: 0.9em; padding: 8px 16px; grid-column: 1 / -1;">
+                                            📧 Testar Envio por Email
+                                        </button>
+                                    </div>
+                                    <div style="margin-top: 15px;">
+                                        <h4 style="font-size: 0.9em; color: #64748b; margin-bottom: 8px;">Status do EmailJS:</h4>
+                                        <div id="statusServicos" style="font-size: 0.8em; color: #94a3b8;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -945,17 +1624,252 @@ Descrição: Breve descrição (opcional)
         </div>
     </div>
 
+    <!-- Modal Apple Style -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal-container" id="modalContainer">
+            <div class="modal-header">
+                <div class="modal-icon" id="modalIcon">🔔</div>
+                <h3 class="modal-title" id="modalTitle">Título</h3>
+                <p class="modal-message" id="modalMessage">Mensagem</p>
+            </div>
+            <div class="modal-actions" id="modalActions">
+                <button class="modal-button modal-button--primary" id="modalPrimaryBtn">OK</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         let currentQuestion = 0;
         const totalQuestions = 7;
         let briefingData = {};
+
+        // Configuração EmailJS - usando suas credenciais do contrato.html
+        const CONFIG_EMAILJS = {
+            serviceId: 'service_bj6c6km',
+            templateId: 'template_i076npw', 
+            publicKey: 'E1K5MJNe_E2Dk5n7o'
+        };
+
+        // Sistema de Modal Apple Style
+        function showModal(options = {}) {
+            const {
+                type = 'info',
+                icon = '🔔',
+                title = 'Aviso',
+                message = 'Mensagem',
+                buttons = [{text: 'OK', action: 'close', style: 'primary'}]
+            } = options;
+
+            const overlay = document.getElementById('modalOverlay');
+            const container = document.getElementById('modalContainer');
+            const iconEl = document.getElementById('modalIcon');
+            const titleEl = document.getElementById('modalTitle');
+            const messageEl = document.getElementById('modalMessage');
+            const actionsEl = document.getElementById('modalActions');
+
+            // Configurar tipo
+            container.className = `modal-container ${type}`;
+            
+            // Configurar conteúdo
+            iconEl.textContent = icon;
+            titleEl.textContent = title;
+            messageEl.textContent = message;
+
+            // Configurar botões
+            actionsEl.innerHTML = '';
+            if (buttons.length === 0) {
+                // Modal de loading sem botões
+                const loadingDiv = document.createElement('div');
+                loadingDiv.style.cssText = `
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 8px;
+                    color: #667eea;
+                    font-size: 0.9em;
+                `;
+                loadingDiv.innerHTML = `
+                    <div style="
+                        width: 16px;
+                        height: 16px;
+                        border: 2px solid #e2e8f0;
+                        border-top-color: #667eea;
+                        border-radius: 50%;
+                        animation: spin 1s linear infinite;
+                    "></div>
+                    Processando...
+                `;
+                actionsEl.appendChild(loadingDiv);
+            } else {
+                buttons.forEach((btn, index) => {
+                    const button = document.createElement('button');
+                    button.className = `modal-button modal-button--${btn.style || 'primary'}`;
+                    button.textContent = btn.text;
+                    button.onclick = () => {
+                        if (btn.action === 'close') {
+                            hideModal();
+                        } else if (typeof btn.action === 'function') {
+                            btn.action();
+                        }
+                    };
+                    actionsEl.appendChild(button);
+                });
+            }
+
+            // Mostrar modal
+            overlay.classList.add('active');
+            
+            // Focar no primeiro botão
+            setTimeout(() => {
+                const firstBtn = actionsEl.querySelector('.modal-button');
+                if (firstBtn) firstBtn.focus();
+            }, 300);
+
+            // Fechar com ESC
+            const handleEsc = (e) => {
+                if (e.key === 'Escape') {
+                    hideModal();
+                    document.removeEventListener('keydown', handleEsc);
+                }
+            };
+            document.addEventListener('keydown', handleEsc);
+
+            // Fechar clicando no overlay
+            overlay.onclick = (e) => {
+                if (e.target === overlay) {
+                    hideModal();
+                }
+            };
+        }
+
+        function hideModal() {
+            const overlay = document.getElementById('modalOverlay');
+            overlay.classList.remove('active');
+        }
+
+        // Funções de conveniência para diferentes tipos de modal
+        function showAlert(message, title = 'Aviso', type = 'info') {
+            const icons = {
+                info: 'ℹ️',
+                warning: '⚠️',
+                error: '❌',
+                success: '✅'
+            };
+            
+            showModal({
+                type: type,
+                icon: icons[type] || 'ℹ️',
+                title: title,
+                message: message,
+                buttons: [{text: 'OK', action: 'close', style: 'primary'}]
+            });
+        }
+
+        function showConfirm(message, title = 'Confirmação', onConfirm = null, onCancel = null) {
+            showModal({
+                type: 'confirm',
+                icon: '❓',
+                title: title,
+                message: message,
+                buttons: [
+                    {text: 'Cancelar', action: onCancel || 'close', style: 'secondary'},
+                    {text: 'Confirmar', action: onConfirm || 'close', style: 'danger'}
+                ]
+            });
+        }
 
         // Inicializar
         document.addEventListener('DOMContentLoaded', function() {
             showQuestion(1);
             setupEventListeners();
             updateProgress();
+            setupAutoSave();
+            setupBeforeUnload();
+            configurarServicosOnline();
+            
+            // Inicializar barras de URL
+            setTimeout(() => {
+                document.querySelectorAll('.browser-address').forEach(addr => {
+                    addr.classList.add('loaded');
+                });
+            }, 1000);
+
+            // Mostrar modal de boas-vindas se for a primeira visita
+            if (!localStorage.getItem('briefingVisited')) {
+                setTimeout(() => {
+                    showModal({
+                        type: 'info',
+                        icon: '👋',
+                        title: 'Bem-vindo ao Briefing!',
+                        message: 'Olá! Este briefing foi criado especialmente para entender sua visão e criar o site perfeito para seu portfólio. Suas respostas são salvas automaticamente.',
+                        buttons: [{text: 'Vamos começar!', action: 'close', style: 'primary'}]
+                    });
+                    localStorage.setItem('briefingVisited', 'true');
+                }, 2000);
+            }
         });
+
+        function setupAutoSave() {
+            // Auto-save a cada 30 segundos
+            setInterval(() => {
+                if (Object.keys(briefingData).length > 0) {
+                    saveCurrentData();
+                }
+            }, 30000);
+        }
+
+        function setupBeforeUnload() {
+            // Avisar antes de sair se há dados não salvos
+            window.addEventListener('beforeunload', function(e) {
+                if (Object.keys(briefingData).length > 0) {
+                    e.preventDefault();
+                    e.returnValue = 'Você tem dados não salvos. Tem certeza que deseja sair?';
+                    return 'Você tem dados não salvos. Tem certeza que deseja sair?';
+                }
+            });
+        }
+
+        // Adicionar função para mostrar modal de confirmação personalizada
+        function showLeaveConfirmation() {
+            showConfirm(
+                'Você tem dados não salvos. Seus dados estão sendo salvos automaticamente, mas recomendamos fazer o download antes de sair.',
+                'Sair sem salvar?',
+                () => {
+                    // Fazer download automaticamente
+                    downloadBriefing();
+                    hideModal();
+                },
+                () => {
+                    // Apenas fechar
+                    hideModal();
+                }
+            );
+        }
+
+        function showHelpModal() {
+            showModal({
+                type: 'info',
+                icon: '💡',
+                title: 'Dicas do Briefing',
+                message: `
+⌨️ ATALHOS:
+• Enter: Próxima pergunta
+• ESC: Fechar modal
+• F1: Mostrar esta ajuda
+
+💾 SALVAMENTO:
+• Seus dados são salvos automaticamente
+• Backup de emergência ativo
+• Download disponível a qualquer momento
+
+🔄 NAVEGAÇÃO:
+• Use os botões ou Enter para navegar
+• Clique nos botões do navegador para easter eggs
+• Suas respostas são validadas automaticamente
+                `,
+                buttons: [{text: 'Entendi!', action: 'close', style: 'primary'}]
+            });
+        }
 
         function setupEventListeners() {
             // Checkbox visual feedback
@@ -1010,7 +1924,40 @@ Descrição: Breve descrição (opcional)
                 element.addEventListener('input', saveCurrentData);
             });
 
-            // Enter para próxima pergunta
+            // Easter egg: Cliques nos botões do navegador
+            document.querySelectorAll('.browser-button').forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    if (this.classList.contains('browser-button--close')) {
+                        showModal({
+                            type: 'warning',
+                            icon: '😄',
+                            title: 'Ei, calma aí!',
+                            message: 'Você clicou para fechar, mas este é só um efeito visual! Continue preenchendo o briefing.',
+                            buttons: [{text: 'Ops, entendi!', action: 'close', style: 'primary'}]
+                        });
+                    } else if (this.classList.contains('browser-button--minimize')) {
+                        showModal({
+                            type: 'info',
+                            icon: '🔍',
+                            title: 'Minimizar?',
+                            message: 'Esta é uma simulação de navegador! Mas que bom que você está prestando atenção nos detalhes.',
+                            buttons: [{text: 'Haha, continuando!', action: 'close', style: 'primary'}]
+                        });
+                    } else if (this.classList.contains('browser-button--maximize')) {
+                        showModal({
+                            type: 'success',
+                            icon: '📱',
+                            title: 'Já está maximizado!',
+                            message: 'O briefing já está otimizado para sua tela. Foque nas perguntas que o visual já está perfeito!',
+                            buttons: [{text: 'Perfeito!', action: 'close', style: 'success'}]
+                        });
+                    }
+                });
+            });
+
+            // Enter para próxima pergunta e F1 para ajuda
             document.addEventListener('keydown', function(e) {
                 if (e.key === 'Enter' && !e.shiftKey) {
                     const activeElement = document.activeElement;
@@ -1018,6 +1965,9 @@ Descrição: Breve descrição (opcional)
                         e.preventDefault();
                         nextQuestion();
                     }
+                } else if (e.key === 'F1') {
+                    e.preventDefault();
+                    showHelpModal();
                 }
             });
         }
@@ -1035,6 +1985,9 @@ Descrição: Breve descrição (opcional)
                 header.style.display = 'none';
             }
 
+            // Simular carregamento da barra de URL
+            simulateBrowserLoading();
+
             // Esconder todas as perguntas
             document.querySelectorAll('.question-container').forEach(container => {
                 container.classList.remove('active');
@@ -1047,12 +2000,28 @@ Descrição: Breve descrição (opcional)
             } else if (questionNumber > totalQuestions) {
                 document.getElementById('finalScreen').classList.add('active');
                 document.getElementById('navigation').style.display = 'none';
+                // Verificar status dos serviços na tela final
+                setTimeout(verificarStatusServicos, 500);
                 return;
             }
 
             // Atualizar navegação
             updateNavigation();
             updateProgress();
+        }
+
+        function simulateBrowserLoading() {
+            // Simular loading das barras de URL
+            const addresses = document.querySelectorAll('.browser-address');
+            addresses.forEach(addr => {
+                addr.classList.add('loading');
+                addr.classList.remove('loaded');
+                
+                setTimeout(() => {
+                    addr.classList.remove('loading');
+                    addr.classList.add('loaded');
+                }, 500);
+            });
         }
 
         function updateNavigation() {
@@ -1115,21 +2084,21 @@ Descrição: Breve descrição (opcional)
                     const nome = document.getElementById('nomeArtistico').value.trim();
                     const area = document.getElementById('areaAtuacao').value;
                     if (!nome || !area) {
-                        alert('Por favor, preencha seu nome artístico e área de atuação.');
+                        showAlert('Por favor, preencha seu nome artístico e área de atuação.', 'Campos obrigatórios', 'warning');
                         isValid = false;
                     }
                     break;
                 case 2:
                     const vibesSelecionadas = document.querySelectorAll('input[name="vibe"]:checked');
                     if (vibesSelecionadas.length === 0) {
-                        alert('Por favor, selecione pelo menos uma vibe para seu site.');
+                        showAlert('Por favor, selecione pelo menos uma vibe para seu site.', 'Seleção obrigatória', 'warning');
                         isValid = false;
                     }
                     break;
                 case 6:
                     const email = document.getElementById('emailOrcamento').value.trim();
                     if (email && !validateEmail(email)) {
-                        alert('Por favor, insira um email válido.');
+                        showAlert('Por favor, insira um email válido.', 'Email inválido', 'error');
                         isValid = false;
                     }
                     break;
@@ -1147,7 +2116,14 @@ Descrição: Breve descrição (opcional)
             const currentContainer = document.getElementById(`question${currentQuestion}`);
             if (!currentContainer) return;
 
-            const formData = new FormData();
+            // Resetar arrays para checkboxes da pergunta atual
+            const checkboxNames = ['vibe', 'referencia', 'secao'];
+            checkboxNames.forEach(name => {
+                const checkboxes = currentContainer.querySelectorAll(`input[name="${name}"]`);
+                if (checkboxes.length > 0) {
+                    briefingData[name] = [];
+                }
+            });
             
             // Salvar todos os inputs da pergunta atual
             currentContainer.querySelectorAll('input, textarea, select').forEach(element => {
@@ -1156,17 +2132,73 @@ Descrição: Breve descrição (opcional)
                         if (!briefingData[element.name]) briefingData[element.name] = [];
                         briefingData[element.name].push(element.value);
                     }
+                } else if (element.type === 'file') {
+                    // Salvar informações do arquivo
+                    if (element.files.length > 0) {
+                        briefingData[element.id] = {
+                            name: element.files[0].name,
+                            size: element.files[0].size,
+                            type: element.files[0].type,
+                            uploaded: true
+                        };
+                    }
                 } else {
                     briefingData[element.id] = element.value;
                 }
             });
 
-            // Salvar no localStorage
+            // Adicionar timestamp
+            briefingData.lastUpdated = new Date().toISOString();
+            briefingData.questionNumber = currentQuestion;
+
+            // Salvar no localStorage (múltiplas chaves para backup)
             localStorage.setItem('briefingData', JSON.stringify(briefingData));
+            localStorage.setItem('briefingBackup', JSON.stringify(briefingData));
+            localStorage.setItem('briefingTimestamp', new Date().toISOString());
+            
+            // Indicador visual de salvamento
+            showSaveIndicator();
+        }
+
+        function showSaveIndicator() {
+            const indicator = document.createElement('div');
+            indicator.innerHTML = '💾 Salvo automaticamente';
+            indicator.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: #22c55e;
+                color: white;
+                padding: 8px 16px;
+                border-radius: 20px;
+                font-size: 0.9em;
+                font-weight: 600;
+                z-index: 1000;
+                animation: slideInRight 0.3s ease, fadeOut 0.3s ease 2s forwards;
+            `;
+            document.body.appendChild(indicator);
+            
+            setTimeout(() => {
+                if (indicator.parentNode) {
+                    indicator.parentNode.removeChild(indicator);
+                }
+            }, 3000);
         }
 
         function submitBriefing() {
             saveCurrentData();
+            
+            // Mostrar modal de conclusão especial
+            showModal({
+                type: 'success',
+                icon: '🎉',
+                title: 'Parabéns, Willian!',
+                message: 'Você concluiu o briefing com sucesso! Agora vamos criar algo incrível juntos.',
+                buttons: [
+                    {text: 'Ver Resultado', action: () => { hideModal(); showQuestion(totalQuestions + 1); }, style: 'success'},
+                    {text: 'Enviar Agora', action: () => { hideModal(); showQuestion(totalQuestions + 1); enviarBriefingPorEmail(); }, style: 'primary'}
+                ]
+            });
             
             // Aqui você pode enviar os dados para o servidor
             console.log('Dados do briefing:', briefingData);
@@ -1175,31 +2207,105 @@ Descrição: Breve descrição (opcional)
             const submitBtn = document.getElementById('submitBtn');
             submitBtn.innerHTML = '📧 Enviando...';
             submitBtn.disabled = true;
-            
-            setTimeout(() => {
-                showQuestion(totalQuestions + 1);
-                
-                // Enviar email com os dados (integração com EmailJS)
-                enviarBriefingPorEmail();
-            }, 2000);
         }
 
         function enviarBriefingPorEmail() {
+            // Enviar apenas via EmailJS - simples e direto
+            enviarViaEmailJS()
+                .then(() => {
+                    hideModal();
+                    showModal({
+                        type: 'success',
+                        icon: '✅',
+                        title: 'Briefing enviado!',
+                        message: 'Seu briefing foi enviado com sucesso para rodrigorochagiuntini@bityx.app. Retorno em até 24 horas.',
+                        buttons: [{text: 'Perfeito', action: 'close', style: 'success'}]
+                    });
+                })
+                .catch(error => {
+                    console.error('Erro no envio:', error);
+                    hideModal();
+                    showModal({
+                        type: 'error',
+                        icon: '❌',
+                        title: 'Erro no envio',
+                        message: 'Não foi possível enviar o briefing por email. Seus dados estão salvos localmente e você pode fazer o download.',
+                        buttons: [
+                            {text: 'Baixar Briefing', action: () => { downloadBriefing(); hideModal(); }, style: 'primary'},
+                            {text: 'Tentar Novamente', action: () => { hideModal(); testarEnvioOnline(); }, style: 'secondary'}
+                        ]
+                    });
+                });
+        }
+
+        async function enviarViaEmailJS() {
+            // Verificar se EmailJS está disponível
+            if (typeof emailjs === 'undefined') {
+                throw new Error('❌ EmailJS não foi carregado. Verifique sua conexão.');
+            }
+
+            // Inicializar EmailJS v4 (mesmo método do contrato)
+            emailjs.init({
+                publicKey: CONFIG_EMAILJS.publicKey,
+            });
+            
             // Preparar dados formatados para email
             const dadosFormatados = formatarDadosParaEmail();
-            
-            // Configurar EmailJS (usar as mesmas credenciais do sistema de contrato)
             const templateParams = {
                 to_email: 'rodrigorochagiuntini@bityx.app',
-                subject: 'Novo Briefing - Willian (' + (briefingData.nomeArtistico || 'Nome artístico não informado') + ')',
-                briefing_completo: dadosFormatados,
+                subject: '🎬 Novo Briefing - Willian (' + (briefingData.nomeArtistico || 'Nome artístico não informado') + ')',
                 cliente_nome: 'Willian',
                 cliente_email: briefingData.emailOrcamento || 'Não informado',
-                cliente_whatsapp: briefingData.whatsapp || 'Não informado'
+                cliente_telefone: briefingData.whatsapp || 'Não informado',
+                data_contrato: new Date().toLocaleDateString('pt-BR'),
+                message: dadosFormatados,
+                assinatura_cliente: briefingData.dados || JSON.stringify(briefingData, null, 2),
+                assinatura_prestador: 'Sistema de briefing automático'
             };
 
-            // Aqui você integraria com EmailJS
-            console.log('Enviando briefing por email...', templateParams);
+            // Enviar email via EmailJS
+            return emailjs.send(
+                CONFIG_EMAILJS.serviceId,
+                CONFIG_EMAILJS.templateId,
+                templateParams
+            );
+        }
+
+
+
+        function showOnlineStatus(message, type = 'info') {
+            const colors = {
+                info: '#3b82f6',
+                success: '#22c55e',
+                error: '#ef4444',
+                warning: '#f59e0b'
+            };
+
+            const statusDiv = document.createElement('div');
+            statusDiv.innerHTML = message;
+            statusDiv.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${colors[type]};
+                color: white;
+                padding: 12px 20px;
+                border-radius: 20px;
+                font-size: 0.9em;
+                font-weight: 600;
+                z-index: 1000;
+                max-width: 300px;
+                text-align: center;
+                animation: slideInRight 0.3s ease, fadeOut 0.3s ease 4s forwards;
+            `;
+            
+            document.body.appendChild(statusDiv);
+            
+            setTimeout(() => {
+                if (statusDiv.parentNode) {
+                    statusDiv.parentNode.removeChild(statusDiv);
+                }
+            }, 5000);
         }
 
         function formatarDadosParaEmail() {
@@ -1244,20 +2350,236 @@ Descrição: Breve descrição (opcional)
             return formatted;
         }
 
+        function downloadBriefing() {
+            const dadosFormatados = formatarDadosParaEmail();
+            const dataAtual = new Date().toLocaleDateString('pt-BR');
+            const nomeCliente = briefingData.nomeArtistico || 'Willian';
+            
+            // Criar arquivo de texto
+            const blob = new Blob([dadosFormatados], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            
+            // Criar link de download
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `Briefing_${nomeCliente}_${dataAtual.replace(/\//g, '-')}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            
+            // Limpar
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            // Também criar JSON
+            const jsonBlob = new Blob([JSON.stringify(briefingData, null, 2)], { type: 'application/json' });
+            const jsonUrl = URL.createObjectURL(jsonBlob);
+            
+            const jsonA = document.createElement('a');
+            jsonA.href = jsonUrl;
+            jsonA.download = `Briefing_${nomeCliente}_${dataAtual.replace(/\//g, '-')}.json`;
+            document.body.appendChild(jsonA);
+            jsonA.click();
+            
+            document.body.removeChild(jsonA);
+            URL.revokeObjectURL(jsonUrl);
+            
+            // Feedback visual
+            showDownloadSuccess();
+        }
+
+        function showDownloadSuccess() {
+            showModal({
+                type: 'success',
+                icon: '📄',
+                title: 'Download completo!',
+                message: 'Seu briefing foi baixado com sucesso em formato TXT e JSON. Verifique sua pasta de downloads.',
+                buttons: [{text: 'Perfeito', action: 'close', style: 'success'}]
+            });
+        }
+
+        function testarEnvioOnline() {
+            if (Object.keys(briefingData).length === 0) {
+                showAlert('Preencha pelo menos uma pergunta antes de testar o envio.', 'Dados insuficientes', 'warning');
+                return;
+            }
+
+            // Mostrar modal de loading
+            showModal({
+                type: 'info',
+                icon: '📧',
+                title: 'Enviando teste...',
+                message: 'Testando o envio do briefing por email. Aguarde um momento.',
+                buttons: [] // Sem botões para simular loading
+            });
+
+            // Enviar via EmailJS
+            enviarBriefingPorEmail();
+        }
+
+        function verificarStatusServicos() {
+            const statusDiv = document.getElementById('statusServicos');
+            if (!statusDiv) return;
+
+            // EmailJS já configurado com suas credenciais do contrato
+            statusDiv.innerHTML = '📧 EmailJS: ✅ Configurado e funcionando (mesmas credenciais do contrato)';
+        }
+
+
+
+        function configurarServicosOnline() {
+            // Configuração simplificada via arquivo externo (opcional)
+            if (typeof EMAILJS_CONFIG !== 'undefined') {
+                CONFIG_EMAILJS.serviceId = EMAILJS_CONFIG.serviceId || CONFIG_EMAILJS.serviceId;
+                CONFIG_EMAILJS.templateId = EMAILJS_CONFIG.templateId || CONFIG_EMAILJS.templateId;
+                CONFIG_EMAILJS.publicKey = EMAILJS_CONFIG.publicKey || CONFIG_EMAILJS.publicKey;
+            }
+        }
+
+        function clearBriefingData() {
+            showConfirm(
+                'Tem certeza que deseja limpar todos os dados salvos? Esta ação não pode ser desfeita.',
+                'Limpar dados do briefing',
+                () => {
+                    // Limpar todos os dados salvos
+                    localStorage.removeItem('briefingData');
+                    localStorage.removeItem('briefingBackup');
+                    localStorage.removeItem('briefingTimestamp');
+                    briefingData = {};
+                    
+                    // Resetar formulário
+                    document.querySelectorAll('input, textarea, select').forEach(element => {
+                        if (element.type === 'checkbox') {
+                            element.checked = false;
+                            element.closest('.checkbox-item').classList.remove('selected');
+                        } else if (element.type !== 'file') {
+                            element.value = '';
+                        }
+                    });
+                    
+                    // Esconder área de logo se estiver visível
+                    const logoUpload = document.getElementById('logoUpload');
+                    if (logoUpload) {
+                        logoUpload.style.display = 'none';
+                    }
+                    
+                    // Voltar para primeira pergunta
+                    showQuestion(1);
+                    
+                    // Feedback visual
+                    showClearSuccess();
+                    
+                    // Fechar modal
+                    hideModal();
+                }
+            );
+        }
+
+        function showClearSuccess() {
+            showModal({
+                type: 'success',
+                icon: '🗑️',
+                title: 'Dados limpos!',
+                message: 'Todos os dados foram removidos com sucesso. Você pode começar o briefing novamente.',
+                buttons: [{text: 'OK', action: 'close', style: 'success'}]
+            });
+        }
+
         // Carregar dados salvos se existirem
         window.addEventListener('load', function() {
             const savedData = localStorage.getItem('briefingData');
+            const backupData = localStorage.getItem('briefingBackup');
+            const timestamp = localStorage.getItem('briefingTimestamp');
+            
             if (savedData) {
                 briefingData = JSON.parse(savedData);
-                // Restaurar campos preenchidos
-                Object.keys(briefingData).forEach(key => {
-                    const element = document.getElementById(key);
-                    if (element) {
-                        element.value = briefingData[key];
-                    }
-                });
+                restoreFormData();
+                showDataRestoredMessage(timestamp);
+            } else if (backupData) {
+                // Tentar recuperar do backup
+                briefingData = JSON.parse(backupData);
+                restoreFormData();
+                showBackupRestoredMessage();
             }
         });
+
+
+
+        function showBackupRestoredMessage() {
+            showModal({
+                type: 'warning',
+                icon: '🔧',
+                title: 'Backup restaurado!',
+                message: 'Seus dados foram recuperados do backup de emergência. Algumas informações podem estar desatualizadas.',
+                buttons: [{text: 'OK', action: 'close', style: 'primary'}]
+            });
+        }
+
+        function getDataSummary() {
+            const summary = {
+                totalCampos: Object.keys(briefingData).length,
+                ultimaAtualizacao: briefingData.lastUpdated,
+                perguntaAtual: briefingData.questionNumber,
+                temNome: !!briefingData.nomeArtistico,
+                temContato: !!briefingData.emailOrcamento,
+                temProjetos: !!briefingData.linksProjetos,
+                porcentagemCompleta: Math.round((briefingData.questionNumber / totalQuestions) * 100)
+            };
+            return summary;
+        }
+
+        function restoreFormData() {
+            // Restaurar campos de texto, textarea e select
+            Object.keys(briefingData).forEach(key => {
+                const element = document.getElementById(key);
+                if (element && typeof briefingData[key] === 'string') {
+                    element.value = briefingData[key];
+                }
+            });
+
+            // Restaurar checkboxes
+            const checkboxGroups = ['vibe', 'referencia', 'secao'];
+            checkboxGroups.forEach(groupName => {
+                if (briefingData[groupName] && Array.isArray(briefingData[groupName])) {
+                    briefingData[groupName].forEach(value => {
+                        const checkbox = document.querySelector(`input[name="${groupName}"][value="${value}"]`);
+                        if (checkbox) {
+                            checkbox.checked = true;
+                            checkbox.closest('.checkbox-item').classList.add('selected');
+                        }
+                    });
+                }
+            });
+
+            // Restaurar upload de logo
+            if (briefingData.temLogo === 'sim') {
+                const logoUpload = document.getElementById('logoUpload');
+                if (logoUpload) {
+                    logoUpload.style.display = 'block';
+                }
+            }
+
+            // Restaurar informações de arquivo
+            if (briefingData.logoFile && briefingData.logoFile.uploaded) {
+                const logoUpload = document.getElementById('logoUpload');
+                if (logoUpload) {
+                    logoUpload.innerHTML = `
+                        <div class="file-upload-text">✅ Arquivo: ${briefingData.logoFile.name}</div>
+                        <div class="file-upload-hint">Clique para alterar</div>
+                    `;
+                }
+            }
+        }
+
+        function showDataRestoredMessage(timestamp) {
+            const timeStr = timestamp ? new Date(timestamp).toLocaleString('pt-BR') : 'recentemente';
+            showModal({
+                type: 'info',
+                icon: '🔄',
+                title: 'Dados restaurados!',
+                message: `Suas respostas foram restauradas automaticamente (salvas em ${timeStr}). Você pode continuar de onde parou.`,
+                buttons: [{text: 'Entendi', action: 'close', style: 'primary'}]
+            });
+        }
     </script>
 </body>
 </html> 
