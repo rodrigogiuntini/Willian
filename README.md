@@ -1,112 +1,38 @@
-# Sistema de Contrato Digital
+# Sistema de Contrato Digital + Apresentação UI/UX
 
-## 📋 Descrição
+## 📁 Estrutura dos Arquivos
 
-Sistema completo de contrato digital com assinatura eletrônica e envio automático de emails. Desenvolvido para prestadores de serviços que precisam formalizar contratos com clientes de forma rápida e profissional.
+### 🎯 **Fluxo da Experiência**
 
-## 🚀 Funcionalidades
+1. **`index.html`** - Página de entrada personalizada para o Willian
+2. **`apresentacao.html`** - Apresentação elegante das habilidades UI/UX
+3. **`briefing.html`** - Formulário de briefing interativo estilo Typeform
+4. **`contrato.html`** - Sistema de contrato com assinatura digital
+5. **`contrato-visualizacao.html`** - Visualização do contrato assinado
 
-### ✅ Assinatura Digital
-- Canvas HTML5 para assinatura manuscrita
-- Suporte a mouse e touch (dispositivos móveis)
-- Validação de assinatura (detecta se foi realmente assinado)
-- Formato PNG com fundo branco para melhor qualidade
+### 🎨 **Características do Design**
 
-### 📧 Sistema de Email Automático
-- Envio automático via EmailJS
-- Emails para prestador e cliente
-- Inclui todas as informações do contrato
-- Assinaturas digitais anexadas
+- **Glassmorphism** com backdrop-filter e transparências
+- **Micro-interações** e animações suaves
+- **Design System** consistente em todas as páginas
+- **Responsivo** para desktop e mobile
+- **Personalização** para o cliente Willian
 
-### 🔐 Dados Seguros
-- Armazenamento local (localStorage) 
-- Validação de campos obrigatórios
-- Formatação automática (CPF, telefone)
-- Proteção contra alteração de dados do prestador
+### 🚀 **Tecnologias**
 
-### 📱 Interface Responsiva
-- Design profissional e limpo
-- Funcionamento em desktop e mobile
-- Campos auto-preenchidos (data atual)
-- Experiência de usuário otimizada
-
-## 📁 Estrutura do Projeto
-
-```
-sistema-contrato-digital/
-├── contrato.html              # Sistema principal de contrato
-├── contrato-visualizacao.html # Visualização do contrato assinado
-└── README.md                  # Documentação
-```
-
-## ⚙️ Configuração
-
-### EmailJS
-O sistema utiliza EmailJS para envio de emails automáticos:
-
-- **Service ID**: `service_bj6c6km`
-- **Template ID**: `template_i076npw`
-- **Public Key**: `E1K5MJNe_E2Dk5n7o`
-
-### Dados do Prestador
-Os dados do prestador (contratado) são fixos no sistema:
-
-- **Nome**: Rodrigo Rocha Giuntini
-- **CPF**: 491.248.858-51
-- **Email**: rodrigorochagiuntini@bityx.app
-- **Telefone**: (11) 99144-9842
-- **Endereço**: Rua Indiana, 217 - ap 62, Brooklin - São Paulo
-
-## 🎯 Tipos de Serviço
-
-### Site Simples (R$ 900,00)
-- Layout limpo e profissional
-- Cada projeto com vídeo, imagem, título e descrição
-- Responsivo para todos os dispositivos
-- Sem painel de administração
-
-### Site Completo com Painel (R$ 2.500,00)
-- Inclui tudo da versão simples
-- Painel administrativo com login e senha
-- Permite ao cliente cadastrar e editar projetos
-- Sistema escalável para futuras funcionalidades
-
-## 🔄 Fluxo de Uso
-
-1. **Preenchimento**: Cliente preenche seus dados
-2. **Seleção**: Escolhe o tipo de serviço desejado
-3. **Assinatura**: Ambas as partes assinam digitalmente
-4. **Envio**: Emails automáticos são enviados
-5. **Confirmação**: Redirecionamento para visualização
-
-## 🛡️ Segurança
-
-- Validação de email em tempo real
-- Verificação de assinatura digital
-- Dados do prestador protegidos contra alteração
-- Armazenamento seguro no navegador
-
-## 📱 Compatibilidade
-
-- ✅ Chrome, Firefox, Safari, Edge
-- ✅ Desktop e Mobile
-- ✅ Dispositivos com touch
-- ✅ Não requer instalação
-
-## 🔧 Tecnologias Utilizadas
-
-- HTML5 Canvas (assinatura digital)
+- HTML5 + CSS3 avançado
 - JavaScript ES6+
-- EmailJS (envio de emails)
-- CSS3 (design responsivo)
-- LocalStorage (armazenamento)
+- Inter Font (Google Fonts)
+- EmailJS para envio automático
+- Canvas API para assinatura digital
 
-## 📞 Contato
+### 🎯 **Objetivos**
 
-Para dúvidas ou suporte:
-- **Email**: rodrigorochagiuntini@bityx.app
-- **Telefone**: (11) 99144-9842
+1. **Demonstrar competência** através da própria experiência
+2. **Construir confiança** com design profissional
+3. **Coletar informações** de forma envolvente
+4. **Entregar resultado** com contrato funcional
 
 ---
 
-**Sistema desenvolvido para agilizar e profissionalizar o processo de contratação de serviços digitais.** 
+**Experiência completa: da primeira impressão até o contrato assinado.** 
