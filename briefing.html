@@ -1646,11 +1646,11 @@ Descrição: Breve descrição (opcional)
         // Configuração EmailJS - template específico para briefing
         const CONFIG_EMAILJS = {
             serviceId: 'service_bj6c6km',
-            templateId: 'template_briefing', // Template específico para briefing
+            templateId: 'template_z16zup7', // Template específico para briefing
             publicKey: 'E1K5MJNe_E2Dk5n7o'
         };
 
-        // 📋 IMPORTANTE: Criar template 'template_briefing' no EmailJS
+        // 📋 TEMPLATE CRIADO: 'template_z16zup7' já está no EmailJS
         // Instruções completas em: TEMPLATE_EMAILJS_BRIEFING.md
 
         // Sistema de Modal Apple Style
@@ -2318,7 +2318,7 @@ Descrição: Breve descrição (opcional)
                 templateParams
             ).catch(error => {
                 // Se template do briefing não existir, usar template do contrato como fallback
-                if (error.text && error.text.includes('template_briefing')) {
+                if (error.text && error.text.includes('template_z16zup7')) {
                     console.log('⚠️ Template briefing não encontrado, usando template do contrato...');
                     
                     // Adaptar parâmetros para template do contrato
