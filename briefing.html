@@ -2240,55 +2240,50 @@ Descrição: Breve descrição (opcional)
             submitBtn.disabled = true;
         }
 
-        function enviarBriefingPorEmail() {
-            // Enviar apenas via EmailJS - simples e direto
-            enviarViaEmailJS()
-                .then((result) => {
-                    hideModal();
-                    
-                    // Verificar se foi enviado via fallback
-                    if (result && result.fallback) {
-                        showModal({
-                            type: 'warning',
-                            icon: '⚠️',
-                            title: 'Briefing enviado via fallback!',
-                            message: 'Seu briefing foi enviado com sucesso, mas usando o template do contrato pois o template específico não foi encontrado. O Rodrigo receberá todos os dados normalmente.',
-                            buttons: [{text: 'Entendi', action: 'close', style: 'primary'}]
-                        });
-                    } else {
-                        showModal({
-                            type: 'success',
-                            icon: '✅',
-                            title: 'Briefing enviado!',
-                            message: 'Seu briefing foi enviado com sucesso para rodrigorochagiuntini@bityx.app. Retorno em até 24 horas.',
-                            buttons: [{text: 'Perfeito', action: 'close', style: 'success'}]
-                        });
-                    }
-                })
-                .catch(error => {
-                    console.error('Erro no envio:', error);
-                    hideModal();
-                    
-                    let errorMessage = 'Não foi possível enviar o briefing por email.';
-                    let errorTitle = 'Erro no envio';
-                    
-                    // Mensagens específicas baseadas no erro
-                    if (error.text && error.text.includes('The template ID not found')) {
-                        errorTitle = 'Template não encontrado';
-                        errorMessage = 'O template específico do briefing não foi encontrado no EmailJS. Isso pode ser resolvido criando o template ou usando o fallback automático.';
-                    }
-                    
+        async function enviarBriefingPorEmail() {
+            console.log('🚀 [DEBUG] === INÍCIO DO ENVIO ===');
+            
+            try {
+                // Tentar envio com fallback automático
+                const result = await enviarViaEmailJS();
+                
+                console.log('✅ [DEBUG] Envio bem-sucedido:', result);
+                hideModal();
+                
+                // Verificar se foi enviado via fallback
+                if (result && result.fallback) {
                     showModal({
-                        type: 'error',
-                        icon: '❌',
-                        title: errorTitle,
-                        message: errorMessage + ' Seus dados estão salvos localmente e você pode fazer o download.',
-                        buttons: [
-                            {text: 'Baixar Briefing', action: () => { downloadBriefing(); hideModal(); }, style: 'primary'},
-                            {text: 'Tentar Novamente', action: () => { hideModal(); testarEnvioOnline(); }, style: 'secondary'}
-                        ]
+                        type: 'warning',
+                        icon: '⚠️',
+                        title: 'Briefing enviado via fallback!',
+                        message: 'Seu briefing foi enviado com sucesso, mas usando o template do contrato pois o template específico não foi encontrado. O Rodrigo receberá todos os dados normalmente.',
+                        buttons: [{text: 'Entendi', action: 'close', style: 'primary'}]
                     });
+                } else {
+                    showModal({
+                        type: 'success',
+                        icon: '✅',
+                        title: 'Briefing enviado!',
+                        message: 'Seu briefing foi enviado com sucesso para rodrigorochagiuntini@bityx.app. Retorno em até 24 horas.',
+                        buttons: [{text: 'Perfeito', action: 'close', style: 'success'}]
+                    });
+                }
+                
+            } catch (error) {
+                console.error('❌ [DEBUG] ERRO FINAL - Nem template específico nem fallback funcionaram:', error);
+                hideModal();
+                
+                showModal({
+                    type: 'error',
+                    icon: '❌',
+                    title: 'Falha total no envio',
+                    message: 'Não foi possível enviar nem com template específico nem com fallback. Tente o botão "Forçar Fallback" ou baixe o briefing.',
+                    buttons: [
+                        {text: 'Forçar Fallback', action: () => { enviarComFallback(); hideModal(); }, style: 'primary'},
+                        {text: 'Baixar Briefing', action: () => { downloadBriefing(); hideModal(); }, style: 'secondary'}
+                    ]
                 });
+            }
         }
 
         async function enviarViaEmailJS() {
