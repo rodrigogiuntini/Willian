@@ -1619,6 +1619,9 @@ Descrição: Breve descrição (opcional)
                                             <button type="button" onclick="console.log('Configuração EmailJS:', CONFIG_EMAILJS)" style="background: #17a2b8; color: white; border: none; padding: 8px 12px; border-radius: 4px; font-size: 0.8em; cursor: pointer;">
                                                 ⚙️ Ver Config
                                             </button>
+                                            <button type="button" onclick="mostrarGuiaTemplate()" style="background: #28a745; color: white; border: none; padding: 8px 12px; border-radius: 4px; font-size: 0.8em; cursor: pointer; grid-column: 1 / -1;">
+                                                📝 Como Criar Template
+                                            </button>
                                         </div>
                                         <p style="margin: 8px 0 0 0; font-size: 0.75em; color: #6c757d;">
                                             Use as ferramentas acima para diagnosticar problemas de envio. Verifique o console do navegador (F12) para logs detalhados.
@@ -2237,24 +2240,46 @@ Descrição: Breve descrição (opcional)
         function enviarBriefingPorEmail() {
             // Enviar apenas via EmailJS - simples e direto
             enviarViaEmailJS()
-                .then(() => {
+                .then((result) => {
                     hideModal();
-                    showModal({
-                        type: 'success',
-                        icon: '✅',
-                        title: 'Briefing enviado!',
-                        message: 'Seu briefing foi enviado com sucesso para rodrigorochagiuntini@bityx.app. Retorno em até 24 horas.',
-                        buttons: [{text: 'Perfeito', action: 'close', style: 'success'}]
-                    });
+                    
+                    // Verificar se foi enviado via fallback
+                    if (result && result.fallback) {
+                        showModal({
+                            type: 'warning',
+                            icon: '⚠️',
+                            title: 'Briefing enviado via fallback!',
+                            message: 'Seu briefing foi enviado com sucesso, mas usando o template do contrato pois o template específico não foi encontrado. O Rodrigo receberá todos os dados normalmente.',
+                            buttons: [{text: 'Entendi', action: 'close', style: 'primary'}]
+                        });
+                    } else {
+                        showModal({
+                            type: 'success',
+                            icon: '✅',
+                            title: 'Briefing enviado!',
+                            message: 'Seu briefing foi enviado com sucesso para rodrigorochagiuntini@bityx.app. Retorno em até 24 horas.',
+                            buttons: [{text: 'Perfeito', action: 'close', style: 'success'}]
+                        });
+                    }
                 })
                 .catch(error => {
                     console.error('Erro no envio:', error);
                     hideModal();
+                    
+                    let errorMessage = 'Não foi possível enviar o briefing por email.';
+                    let errorTitle = 'Erro no envio';
+                    
+                    // Mensagens específicas baseadas no erro
+                    if (error.text && error.text.includes('The template ID not found')) {
+                        errorTitle = 'Template não encontrado';
+                        errorMessage = 'O template específico do briefing não foi encontrado no EmailJS. Isso pode ser resolvido criando o template ou usando o fallback automático.';
+                    }
+                    
                     showModal({
                         type: 'error',
                         icon: '❌',
-                        title: 'Erro no envio',
-                        message: 'Não foi possível enviar o briefing por email. Seus dados estão salvos localmente e você pode fazer o download.',
+                        title: errorTitle,
+                        message: errorMessage + ' Seus dados estão salvos localmente e você pode fazer o download.',
                         buttons: [
                             {text: 'Baixar Briefing', action: () => { downloadBriefing(); hideModal(); }, style: 'primary'},
                             {text: 'Tentar Novamente', action: () => { hideModal(); testarEnvioOnline(); }, style: 'secondary'}
@@ -2381,8 +2406,9 @@ Descrição: Breve descrição (opcional)
                 }
                 
                 // Se template do briefing não existir ou erro específico, usar template do contrato como fallback
-                if (error.text && (error.text.includes('template_z16zup7') || error.text.includes('template not found') || error.status === 400)) {
+                if (error.text && (error.text.includes('template_z16zup7') || error.text.includes('template not found') || error.text.includes('The template ID not found') || error.status === 400)) {
                     console.log('⚠️ [DEBUG] Template briefing não encontrado ou erro 400, usando template do contrato...');
+                    console.log('⚠️ [DEBUG] Erro específico:', error.text);
                     
                     // Adaptar parâmetros para template do contrato
                     const fallbackParams = {
@@ -2405,6 +2431,8 @@ Descrição: Breve descrição (opcional)
                         fallbackParams
                     ).then(response => {
                         console.log('✅ [DEBUG] Fallback enviado com sucesso:', response);
+                        // Marcar que foi enviado via fallback
+                        response.fallback = true;
                         return response;
                     }).catch(fallbackError => {
                         console.error('❌ [DEBUG] Erro no fallback também:', fallbackError);
@@ -2645,12 +2673,82 @@ Descrição: Breve descrição (opcional)
             });
         }
 
+        // Função para mostrar guia de criação do template
+        function mostrarGuiaTemplate() {
+            showModal({
+                type: 'info',
+                icon: '📝',
+                title: 'Como Criar o Template',
+                message: `Para resolver o erro "template not found", siga estes passos:
+
+1. Acesse: https://dashboard.emailjs.com/admin/templates
+
+2. Clique em "Create New Template"
+
+3. Configure:
+   • Template ID: template_z16zup7
+   • Template Name: Briefing Portfolio Audiovisual
+
+4. Cole o HTML do arquivo TEMPLATE_HTML_BRIEFING.html
+
+5. Configure os parâmetros necessários
+
+6. Salve e teste
+
+Enquanto isso, o sistema usará o template do contrato automaticamente.`,
+                buttons: [
+                    {text: 'Abrir Dashboard', action: () => { 
+                        window.open('https://dashboard.emailjs.com/admin/templates', '_blank'); 
+                        hideModal(); 
+                    }, style: 'primary'},
+                    {text: 'Usar Fallback', action: () => { 
+                        enviarBriefingPorEmail(); 
+                        hideModal(); 
+                    }, style: 'secondary'}
+                ]
+            });
+        }
+
         function verificarStatusServicos() {
             const statusDiv = document.getElementById('statusServicos');
             if (!statusDiv) return;
 
-            // EmailJS configurado com template específico para briefing
-            statusDiv.innerHTML = '📧 EmailJS: ✅ Configurado com template específico para briefing<br><small>Fallback: Template do contrato se necessário</small>';
+            // Verificar se template existe testando uma conexão
+            statusDiv.innerHTML = '📧 EmailJS: 🔄 Verificando template...<br><small>Testando template_z16zup7</small>';
+            
+            // Testar template específico
+            testarTemplateEspecifico().then(exists => {
+                if (exists) {
+                    statusDiv.innerHTML = '📧 EmailJS: ✅ Template específico funcionando<br><small>template_z16zup7 encontrado e ativo</small>';
+                } else {
+                    statusDiv.innerHTML = '📧 EmailJS: ⚠️ Template não encontrado<br><small>Usando fallback automático (template do contrato)</small>';
+                }
+            }).catch(() => {
+                statusDiv.innerHTML = '📧 EmailJS: ❌ Erro na verificação<br><small>Verifique conexão com internet</small>';
+            });
+        }
+
+        async function testarTemplateEspecifico() {
+            try {
+                // Tentar enviar um teste mínimo apenas para verificar se template existe
+                emailjs.init({ publicKey: CONFIG_EMAILJS.publicKey });
+                
+                const testParams = {
+                    to_name: 'Teste',
+                    to_email: 'test@test.com',
+                    from_name: 'Teste',
+                    subject: 'Teste Template',
+                    message: 'Teste'
+                };
+
+                await emailjs.send(CONFIG_EMAILJS.serviceId, CONFIG_EMAILJS.templateId, testParams);
+                return true; // Template existe
+            } catch (error) {
+                if (error.text && error.text.includes('The template ID not found')) {
+                    return false; // Template não existe
+                }
+                throw error; // Outro tipo de erro
+            }
         }
 
 

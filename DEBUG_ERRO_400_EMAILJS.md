@@ -7,7 +7,12 @@ api.emailjs.com/api/v1.0/email/send:1
 Failed to load resource: the server responded with a status of 400 ()
 ```
 
-**Erro 400 = Bad Request** - indica problema com a requisição enviada.
+**Erro específico encontrado:**
+```
+The template ID not found. To find this ID, visit https://dashboard.emailjs.com/admin/templates
+```
+
+**Erro 400 = Bad Request** - Template `template_z16zup7` não existe na dashboard do EmailJS.
 
 ---
 
