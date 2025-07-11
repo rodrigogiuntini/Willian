@@ -1,0 +1,1263 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Briefing - Seu Site de Portfólio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            color: #2c3e50;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, rgba(120, 198, 155, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .briefing-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 32px;
+            padding: 48px;
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.08),
+                0 0 0 1px rgba(255, 255, 255, 0.8);
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .briefing-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2, #f093fb);
+            border-radius: 32px 32px 0 0;
+        }
+
+        .progress-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #00d4aa, #00b4d8);
+            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 32px 32px 0 0;
+            z-index: 1;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 48px;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease forwards;
+        }
+
+        .header h1 {
+            font-size: 2.8em;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #2c3e50, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.2;
+        }
+
+        .header p {
+            font-size: 1.25em;
+            color: #64748b;
+            line-height: 1.7;
+            font-weight: 400;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .question-container {
+            display: none;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.4s ease;
+        }
+
+        .question-container.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+            animation: slideInUp 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .question-number {
+            font-size: 0.85em;
+            color: #667eea;
+            font-weight: 700;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            padding: 8px 16px;
+            background: rgba(102, 126, 234, 0.1);
+            border-radius: 12px;
+            display: inline-block;
+            backdrop-filter: blur(10px);
+        }
+
+        .question-title {
+            font-size: 2.2em;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-weight: 700;
+            line-height: 1.2;
+            background: linear-gradient(135deg, #2c3e50, #667eea);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .question-subtitle {
+            font-size: 1.15em;
+            color: #64748b;
+            margin-bottom: 32px;
+            line-height: 1.6;
+            font-weight: 400;
+        }
+
+        .form-group {
+            margin-bottom: 32px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 12px;
+            line-height: 1.4;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 18px 24px;
+            border: 2px solid rgba(0, 0, 0, 0.06);
+            border-radius: 20px;
+            font-size: 1.1em;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-family: inherit;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            color: #2c3e50;
+            font-weight: 500;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #667eea;
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 
+                0 0 0 4px rgba(102, 126, 234, 0.1),
+                0 8px 32px rgba(0, 0, 0, 0.08);
+            transform: translateY(-2px);
+        }
+
+        .form-input::placeholder {
+            color: rgba(44, 62, 80, 0.5);
+            font-weight: 400;
+        }
+
+        .form-textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .form-select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23667eea' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 20px center;
+            background-repeat: no-repeat;
+            background-size: 20px;
+            padding-right: 56px;
+        }
+
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            padding: 20px 24px;
+            border: 2px solid rgba(0, 0, 0, 0.06);
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .checkbox-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(120, 119, 198, 0.1));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .checkbox-item:hover {
+            border-color: #667eea;
+            background: rgba(255, 255, 255, 0.9);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+        }
+
+        .checkbox-item:hover::before {
+            opacity: 1;
+        }
+
+        .checkbox-item.selected {
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 32px rgba(102, 126, 234, 0.2);
+        }
+
+        .checkbox-item.selected::before {
+            opacity: 1;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            margin-right: 12px;
+            width: 18px;
+            height: 18px;
+            accent-color: #667eea;
+        }
+
+        .checkbox-item label {
+            font-size: 1em;
+            color: #2c3e50;
+            cursor: pointer;
+            flex: 1;
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 48px;
+            padding-top: 32px;
+            border-top: 1px solid rgba(0, 0, 0, 0.08);
+            position: relative;
+        }
+
+        .navigation::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.3), transparent);
+        }
+
+        .btn {
+            padding: 16px 32px;
+            border: none;
+            border-radius: 20px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-transform: none;
+            letter-spacing: 0.3px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .btn:hover::before {
+            opacity: 1;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 40px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.8);
+            color: #667eea;
+            border: 2px solid rgba(102, 126, 234, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(102, 126, 234, 0.1);
+            border-color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 32px rgba(102, 126, 234, 0.2);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .step-indicator {
+            text-align: center;
+            color: #64748b;
+            font-size: 0.9em;
+            margin-bottom: 12px;
+            font-weight: 500;
+            padding: 8px 16px;
+            background: rgba(102, 126, 234, 0.05);
+            border-radius: 12px;
+            display: inline-block;
+        }
+
+        .file-upload-area {
+            border: 2px dashed rgba(102, 126, 234, 0.3);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(10px);
+            margin-top: 24px;
+            position: relative;
+        }
+
+        .file-upload-area::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(120, 119, 198, 0.1));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            border-radius: 20px;
+        }
+
+        .file-upload-area:hover {
+            border-color: #667eea;
+            background: rgba(255, 255, 255, 0.8);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+        }
+
+        .file-upload-area:hover::before {
+            opacity: 1;
+        }
+
+        .file-upload-area.dragover {
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 32px rgba(102, 126, 234, 0.2);
+        }
+
+        .file-upload-text {
+            color: #64748b;
+            font-size: 1.1em;
+            margin-bottom: 12px;
+            font-weight: 500;
+            position: relative;
+            z-index: 1;
+        }
+
+        .file-upload-hint {
+            color: #94a3b8;
+            font-size: 0.9em;
+            font-weight: 400;
+            position: relative;
+            z-index: 1;
+        }
+
+        .uploaded-files {
+            margin-top: 20px;
+        }
+
+        .uploaded-file {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .uploaded-file-name {
+            color: #2c3e50;
+            font-weight: 500;
+        }
+
+        .remove-file {
+            color: #e74c3c;
+            cursor: pointer;
+            font-size: 1.2em;
+        }
+
+        .final-screen {
+            text-align: center;
+            padding: 48px 24px;
+        }
+
+        .final-screen h2 {
+            font-size: 2.5em;
+            color: #2c3e50;
+            margin-bottom: 24px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #2c3e50, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.2;
+        }
+
+        .final-screen p {
+            font-size: 1.25em;
+            color: #64748b;
+            line-height: 1.7;
+            margin-bottom: 32px;
+            font-weight: 400;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .contact-info {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 32px;
+            margin-top: 32px;
+            border: 1px solid rgba(102, 126, 234, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .contact-info::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.05), rgba(120, 119, 198, 0.05));
+            opacity: 0.5;
+        }
+
+        .contact-info h3 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-weight: 700;
+            font-size: 1.3em;
+            position: relative;
+            z-index: 1;
+        }
+
+        .contact-info p {
+            color: #64748b;
+            margin-bottom: 12px;
+            font-weight: 500;
+            position: relative;
+            z-index: 1;
+        }
+
+        .contact-info a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .contact-info a:hover {
+            color: #764ba2;
+            text-decoration: none;
+            transform: translateX(4px);
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+            font-size: 3em;
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+
+        @media (max-width: 768px) {
+            .briefing-card {
+                padding: 32px 24px;
+                margin: 16px;
+                border-radius: 24px;
+            }
+            
+            .header h1 {
+                font-size: 2.2em;
+            }
+            
+            .final-screen h2 {
+                font-size: 2.2em;
+            }
+            
+            .question-title {
+                font-size: 1.8em;
+            }
+            
+            .question-subtitle {
+                font-size: 1.1em;
+            }
+            
+            .checkbox-group {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+            
+            .checkbox-item {
+                padding: 16px 20px;
+            }
+            
+            .form-input {
+                padding: 16px 20px;
+                font-size: 1em;
+            }
+            
+            .btn {
+                padding: 14px 28px;
+                font-size: 1em;
+            }
+            
+            .navigation {
+                flex-direction: column;
+                gap: 16px;
+                text-align: center;
+            }
+            
+            .file-upload-area {
+                padding: 32px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="briefing-card">
+            <div class="progress-bar" id="progressBar"></div>
+            
+            <!-- Header -->
+            <div class="header" id="headerSection">
+                <h1>✨ Vamos criar algo incrível juntos, Willian!</h1>
+                <p>Olá, Willian! Que bom te ver por aqui. Este briefing foi pensado especialmente para entender sua visão e criar o site perfeito para o seu portfólio audiovisual. Vamos nessa?</p>
+            </div>
+
+            <!-- Pergunta 1: Informações Gerais -->
+            <div class="question-container" id="question1">
+                <div class="question-number">Pergunta 1 de 7</div>
+                <div class="question-title">Vamos começar pelo básico, Willian! 👋</div>
+                <div class="question-subtitle">Conte-me um pouco sobre você e seu trabalho.</div>
+                
+                <div class="form-group">
+                    <label class="form-label">Nome artístico ou profissional que deve aparecer no site:</label>
+                    <input type="text" class="form-input" id="nomeArtistico" placeholder="Ex: João Silva Films">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Sua principal área de atuação:</label>
+                    <select class="form-input form-select" id="areaAtuacao">
+                        <option value="">Selecione sua área</option>
+                        <option value="videomaker">Videomaker</option>
+                        <option value="filmmaker">Filmmaker</option>
+                        <option value="clipes">Clipes Musicais</option>
+                        <option value="eventos">Eventos</option>
+                        <option value="institucional">Vídeos Institucionais</option>
+                        <option value="comercial">Comerciais</option>
+                        <option value="documentario">Documentários</option>
+                        <option value="outro">Outro</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Breve descrição sobre você (para a bio do site):</label>
+                    <textarea class="form-input form-textarea" id="bioDescricao" placeholder="Ex: Sou um videomaker apaixonado por contar histórias através de imagens. Com mais de 5 anos de experiência, trabalho com eventos, clipes e projetos autorais..."></textarea>
+                </div>
+            </div>
+
+            <!-- Pergunta 2: Estilo Visual -->
+            <div class="question-container" id="question2">
+                <div class="question-number">Pergunta 2 de 7</div>
+                <div class="question-title">Qual é a sua vibe, Willian? 🎨</div>
+                <div class="question-subtitle">Vamos definir o estilo visual que melhor representa você e seu trabalho.</div>
+                
+                <div class="form-group">
+                    <label class="form-label">Que vibe você quer passar no site?</label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="vibe1" name="vibe" value="clean">
+                            <label for="vibe1">Clean & Minimalista</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="vibe2" name="vibe" value="cinematografico">
+                            <label for="vibe2">Cinematográfico</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="vibe3" name="vibe" value="ousado">
+                            <label for="vibe3">Ousado & Criativo</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="vibe4" name="vibe" value="moderno">
+                            <label for="vibe4">Moderno & Tech</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="vibe5" name="vibe" value="artistico">
+                            <label for="vibe5">Artístico & Autoral</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="vibe6" name="vibe" value="elegante">
+                            <label for="vibe6">Elegante & Sofisticado</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Alguma cor ou tom principal que gostaria de usar?</label>
+                    <input type="text" class="form-input" id="corPrincipal" placeholder="Ex: Azul escuro, tons terrosos, preto e branco, cores vibrantes...">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Você tem logotipo?</label>
+                    <select class="form-input form-select" id="temLogo">
+                        <option value="">Selecione</option>
+                        <option value="sim">Sim, tenho logotipo</option>
+                        <option value="nao">Não tenho logotipo</option>
+                        <option value="preciso">Preciso de um logotipo</option>
+                    </select>
+                </div>
+                
+                <div class="file-upload-area" id="logoUpload" style="display: none;">
+                    <div class="file-upload-text">📎 Arraste seu logotipo aqui ou clique para selecionar</div>
+                    <div class="file-upload-hint">Formatos aceitos: PNG, JPG, SVG (máx. 5MB)</div>
+                    <input type="file" id="logoFile" accept=".png,.jpg,.jpeg,.svg" style="display: none;">
+                </div>
+            </div>
+
+            <!-- Pergunta 3: Conteúdo do Portfólio -->
+            <div class="question-container" id="question3">
+                <div class="question-number">Pergunta 3 de 7</div>
+                <div class="question-title">Seus melhores trabalhos, Willian! 🎬</div>
+                <div class="question-subtitle">Agora vamos selecionar os projetos que vão entrar no seu portfólio.</div>
+                
+                <div class="form-group">
+                    <label class="form-label">Quantos projetos você quer incluir no lançamento?</label>
+                    <select class="form-input form-select" id="quantidadeProjetos">
+                        <option value="">Selecione</option>
+                        <option value="3">3 projetos</option>
+                        <option value="4">4 projetos</option>
+                        <option value="5">5 projetos</option>
+                        <option value="6">6 projetos</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Links dos vídeos (YouTube, Vimeo, Drive):</label>
+                    <textarea class="form-input form-textarea" id="linksProjetos" placeholder="Cole aqui os links dos seus projetos, um por linha:
+
+https://youtu.be/exemplo1
+https://vimeo.com/exemplo2
+https://drive.google.com/exemplo3"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Informações dos projetos:</label>
+                    <textarea class="form-input form-textarea" id="infosProjetos" placeholder="Para cada projeto, informe:
+
+PROJETO 1:
+Título: Nome do projeto
+Descrição: Breve descrição (opcional)
+
+PROJETO 2:
+Título: Nome do projeto
+Descrição: Breve descrição (opcional)
+
+(continue para os outros projetos...)"></textarea>
+                </div>
+            </div>
+
+            <!-- Pergunta 4: Referências -->
+            <div class="question-container" id="question4">
+                <div class="question-number">Pergunta 4 de 7</div>
+                <div class="question-title">Suas inspirações, Willian! 💡</div>
+                <div class="question-subtitle">Você mencionou o site do Rafa Webber. Vamos entender o que te inspirou nele!</div>
+                
+                <div class="form-group">
+                    <label class="form-label">O que mais te chamou atenção no site do Rafa Webber?</label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="ref1" name="referencia" value="organizacao">
+                            <label for="ref1">Organização dos projetos</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="ref2" name="referencia" value="rolagem">
+                            <label for="ref2">Navegação e rolagem</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="ref3" name="referencia" value="tipografia">
+                            <label for="ref3">Tipografia</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="ref4" name="referencia" value="player">
+                            <label for="ref4">Player de vídeo grande</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="ref5" name="referencia" value="cores">
+                            <label for="ref5">Esquema de cores</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="ref6" name="referencia" value="layout">
+                            <label for="ref6">Layout geral</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Tem outras referências de sites que você curte?</label>
+                    <textarea class="form-input form-textarea" id="outrasReferencias" placeholder="Cole aqui links de outros sites que você admira ou descreva elementos específicos que gostaria de ter no seu site..."></textarea>
+                </div>
+            </div>
+
+            <!-- Pergunta 5: Seções do Site -->
+            <div class="question-container" id="question5">
+                <div class="question-number">Pergunta 5 de 7</div>
+                <div class="question-title">Estrutura do seu site 🏗️</div>
+                <div class="question-subtitle">Vamos definir as seções que o seu site vai ter.</div>
+                
+                <div class="form-group">
+                    <label class="form-label">Que seções você quer incluir no seu site?</label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="secao1" name="secao" value="portfolio" checked>
+                            <label for="secao1">Portfólio (obrigatório)</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="secao2" name="secao" value="sobre">
+                            <label for="secao2">Sobre mim</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="secao3" name="secao" value="servicos">
+                            <label for="secao3">Serviços</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="secao4" name="secao" value="contato">
+                            <label for="secao4">Contato</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="secao5" name="secao" value="depoimentos">
+                            <label for="secao5">Depoimentos</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="secao6" name="secao" value="blog">
+                            <label for="secao6">Blog</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Alguma seção específica que não está na lista?</label>
+                    <input type="text" class="form-input" id="secaoExtra" placeholder="Ex: Galeria de fotos, Equipamentos, Processo de trabalho...">
+                </div>
+            </div>
+
+            <!-- Pergunta 6: Contatos e Redes Sociais -->
+            <div class="question-container" id="question6">
+                <div class="question-number">Pergunta 6 de 7</div>
+                <div class="question-title">Vamos nos conectar, Willian! 📱</div>
+                <div class="question-subtitle">Agora preciso das suas informações de contato e redes sociais.</div>
+                
+                <div class="form-group">
+                    <label class="form-label">Instagram:</label>
+                    <input type="text" class="form-input" id="instagram" placeholder="@seuusuario">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">WhatsApp para contato comercial:</label>
+                    <input type="text" class="form-input" id="whatsapp" placeholder="(11) 99999-9999">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">E-mail para orçamentos:</label>
+                    <input type="email" class="form-input" id="emailOrcamento" placeholder="contato@seuemail.com">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Outras redes sociais (opcional):</label>
+                    <textarea class="form-input form-textarea" id="outrasRedes" placeholder="YouTube, TikTok, LinkedIn, Behance..."></textarea>
+                </div>
+            </div>
+
+            <!-- Pergunta 7: Extras -->
+            <div class="question-container" id="question7">
+                <div class="question-number">Pergunta 7 de 7</div>
+                <div class="question-title">Toque final, Willian! ✨</div>
+                <div class="question-subtitle">Vamos adicionar aquele toque especial que faz toda a diferença no seu site.</div>
+                
+                <div class="form-group">
+                    <label class="form-label">Alguma frase de impacto ou lema para o topo do site?</label>
+                    <input type="text" class="form-input" id="fraseImpacto" placeholder="Ex: 'Transformando momentos em memórias' ou 'Cada frame conta uma história'">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Tem alguma história especial ou diferencial que deveria aparecer no site?</label>
+                    <textarea class="form-input form-textarea" id="historiaEspecial" placeholder="Ex: Como você começou, um projeto marcante, sua filosofia de trabalho..."></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Alguma funcionalidade específica que você gostaria?</label>
+                    <textarea class="form-input form-textarea" id="funcionalidadeEspecial" placeholder="Ex: Galeria de antes/depois, área de downloads, formulário de briefing personalizado..."></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Algo mais que você gostaria de adicionar?</label>
+                    <textarea class="form-input form-textarea" id="observacoes" placeholder="Qualquer observação, ideia ou sugestão que você tenha..."></textarea>
+                </div>
+            </div>
+
+            <!-- Tela Final -->
+            <div class="question-container" id="finalScreen">
+                <div class="final-screen">
+                    <div class="pulse">🎉</div>
+                    <h2>Briefing concluído, Willian!</h2>
+                    <p>Perfeito! Agora tenho todas as informações necessárias para criar o site ideal para o seu portfólio. Suas respostas foram salvas e já estou visualizando como tudo vai ficar incrível!</p>
+                    <p>Em breve entro em contato para alinharmos os próximos passos e começarmos a dar vida ao seu projeto, Willian.</p>
+                    
+                    <div class="contact-info">
+                        <h3>📞 Próximos passos:</h3>
+                        <p><strong>📧 Email:</strong> <a href="mailto:rodrigorochagiuntini@bityx.app">rodrigorochagiuntini@bityx.app</a></p>
+                        <p><strong>📱 WhatsApp:</strong> <a href="https://wa.me/5511991449842">(11) 99144-9842</a></p>
+                        <p><strong>⏰ Prazo:</strong> Retorno em até 24 horas</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Navegação -->
+            <div class="navigation" id="navigation">
+                <div class="step-indicator">
+                    <span id="currentStep">1</span> de <span id="totalSteps">7</span>
+                </div>
+                
+                <div>
+                    <button type="button" class="btn btn-secondary" id="prevBtn" onclick="previousQuestion()">Anterior</button>
+                    <button type="button" class="btn btn-primary" id="nextBtn" onclick="nextQuestion()">Próximo</button>
+                    <button type="button" class="btn btn-primary" id="submitBtn" onclick="submitBriefing()" style="display: none;">Finalizar Briefing</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentQuestion = 0;
+        const totalQuestions = 7;
+        let briefingData = {};
+
+        // Inicializar
+        document.addEventListener('DOMContentLoaded', function() {
+            showQuestion(1);
+            setupEventListeners();
+            updateProgress();
+        });
+
+        function setupEventListeners() {
+            // Checkbox visual feedback
+            document.querySelectorAll('.checkbox-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    const checkbox = this.querySelector('input[type="checkbox"]');
+                    checkbox.checked = !checkbox.checked;
+                    this.classList.toggle('selected', checkbox.checked);
+                });
+            });
+
+            // Logo upload
+            document.getElementById('temLogo').addEventListener('change', function() {
+                const logoUpload = document.getElementById('logoUpload');
+                if (this.value === 'sim') {
+                    logoUpload.style.display = 'block';
+                } else {
+                    logoUpload.style.display = 'none';
+                }
+            });
+
+            // File upload
+            const logoUpload = document.getElementById('logoUpload');
+            const logoFile = document.getElementById('logoFile');
+            
+            logoUpload.addEventListener('click', () => logoFile.click());
+            logoUpload.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                logoUpload.classList.add('dragover');
+            });
+            logoUpload.addEventListener('dragleave', () => {
+                logoUpload.classList.remove('dragover');
+            });
+            logoUpload.addEventListener('drop', (e) => {
+                e.preventDefault();
+                logoUpload.classList.remove('dragover');
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    handleFileUpload(files[0]);
+                }
+            });
+
+            logoFile.addEventListener('change', function() {
+                if (this.files.length > 0) {
+                    handleFileUpload(this.files[0]);
+                }
+            });
+
+            // Auto-save nas mudanças
+            document.querySelectorAll('input, textarea, select').forEach(element => {
+                element.addEventListener('change', saveCurrentData);
+                element.addEventListener('input', saveCurrentData);
+            });
+
+            // Enter para próxima pergunta
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    const activeElement = document.activeElement;
+                    if (activeElement.tagName !== 'TEXTAREA') {
+                        e.preventDefault();
+                        nextQuestion();
+                    }
+                }
+            });
+        }
+
+        function handleFileUpload(file) {
+            // Aqui você pode implementar o upload do arquivo
+            console.log('Arquivo selecionado:', file.name);
+            // Adicionar feedback visual de arquivo carregado
+        }
+
+        function showQuestion(questionNumber) {
+            // Esconder header se não for a primeira pergunta
+            const header = document.getElementById('headerSection');
+            if (questionNumber > 0) {
+                header.style.display = 'none';
+            }
+
+            // Esconder todas as perguntas
+            document.querySelectorAll('.question-container').forEach(container => {
+                container.classList.remove('active');
+            });
+
+            // Mostrar pergunta atual
+            if (questionNumber > 0 && questionNumber <= totalQuestions) {
+                document.getElementById(`question${questionNumber}`).classList.add('active');
+                currentQuestion = questionNumber;
+            } else if (questionNumber > totalQuestions) {
+                document.getElementById('finalScreen').classList.add('active');
+                document.getElementById('navigation').style.display = 'none';
+                return;
+            }
+
+            // Atualizar navegação
+            updateNavigation();
+            updateProgress();
+        }
+
+        function updateNavigation() {
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const submitBtn = document.getElementById('submitBtn');
+            
+            prevBtn.style.display = currentQuestion > 1 ? 'inline-block' : 'none';
+            
+            if (currentQuestion === totalQuestions) {
+                nextBtn.style.display = 'none';
+                submitBtn.style.display = 'inline-block';
+            } else {
+                nextBtn.style.display = 'inline-block';
+                submitBtn.style.display = 'none';
+            }
+
+            document.getElementById('currentStep').textContent = currentQuestion;
+            document.getElementById('totalSteps').textContent = totalQuestions;
+        }
+
+        function updateProgress() {
+            const progressBar = document.getElementById('progressBar');
+            const progress = (currentQuestion / totalQuestions) * 100;
+            progressBar.style.width = progress + '%';
+        }
+
+        function nextQuestion() {
+            if (validateCurrentQuestion()) {
+                saveCurrentData();
+                showQuestion(currentQuestion + 1);
+            }
+        }
+
+        function previousQuestion() {
+            if (currentQuestion > 1) {
+                saveCurrentData();
+                showQuestion(currentQuestion - 1);
+            }
+        }
+
+        function validateCurrentQuestion() {
+            let isValid = true;
+            const currentContainer = document.getElementById(`question${currentQuestion}`);
+            
+            // Validação básica - campos obrigatórios
+            const requiredFields = currentContainer.querySelectorAll('input[required], textarea[required], select[required]');
+            requiredFields.forEach(field => {
+                if (!field.value.trim()) {
+                    field.style.borderColor = '#e74c3c';
+                    isValid = false;
+                } else {
+                    field.style.borderColor = '#e0e0e0';
+                }
+            });
+
+            // Validações específicas por pergunta
+            switch(currentQuestion) {
+                case 1:
+                    const nome = document.getElementById('nomeArtistico').value.trim();
+                    const area = document.getElementById('areaAtuacao').value;
+                    if (!nome || !area) {
+                        alert('Por favor, preencha seu nome artístico e área de atuação.');
+                        isValid = false;
+                    }
+                    break;
+                case 2:
+                    const vibesSelecionadas = document.querySelectorAll('input[name="vibe"]:checked');
+                    if (vibesSelecionadas.length === 0) {
+                        alert('Por favor, selecione pelo menos uma vibe para seu site.');
+                        isValid = false;
+                    }
+                    break;
+                case 6:
+                    const email = document.getElementById('emailOrcamento').value.trim();
+                    if (email && !validateEmail(email)) {
+                        alert('Por favor, insira um email válido.');
+                        isValid = false;
+                    }
+                    break;
+            }
+
+            return isValid;
+        }
+
+        function validateEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(email);
+        }
+
+        function saveCurrentData() {
+            const currentContainer = document.getElementById(`question${currentQuestion}`);
+            if (!currentContainer) return;
+
+            const formData = new FormData();
+            
+            // Salvar todos os inputs da pergunta atual
+            currentContainer.querySelectorAll('input, textarea, select').forEach(element => {
+                if (element.type === 'checkbox') {
+                    if (element.checked) {
+                        if (!briefingData[element.name]) briefingData[element.name] = [];
+                        briefingData[element.name].push(element.value);
+                    }
+                } else {
+                    briefingData[element.id] = element.value;
+                }
+            });
+
+            // Salvar no localStorage
+            localStorage.setItem('briefingData', JSON.stringify(briefingData));
+        }
+
+        function submitBriefing() {
+            saveCurrentData();
+            
+            // Aqui você pode enviar os dados para o servidor
+            console.log('Dados do briefing:', briefingData);
+            
+            // Simular envio
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.innerHTML = '📧 Enviando...';
+            submitBtn.disabled = true;
+            
+            setTimeout(() => {
+                showQuestion(totalQuestions + 1);
+                
+                // Enviar email com os dados (integração com EmailJS)
+                enviarBriefingPorEmail();
+            }, 2000);
+        }
+
+        function enviarBriefingPorEmail() {
+            // Preparar dados formatados para email
+            const dadosFormatados = formatarDadosParaEmail();
+            
+            // Configurar EmailJS (usar as mesmas credenciais do sistema de contrato)
+            const templateParams = {
+                to_email: 'rodrigorochagiuntini@bityx.app',
+                subject: 'Novo Briefing - Willian (' + (briefingData.nomeArtistico || 'Nome artístico não informado') + ')',
+                briefing_completo: dadosFormatados,
+                cliente_nome: 'Willian',
+                cliente_email: briefingData.emailOrcamento || 'Não informado',
+                cliente_whatsapp: briefingData.whatsapp || 'Não informado'
+            };
+
+            // Aqui você integraria com EmailJS
+            console.log('Enviando briefing por email...', templateParams);
+        }
+
+        function formatarDadosParaEmail() {
+            let formatted = '🎬 BRIEFING COMPLETO - PORTFÓLIO AUDIOVISUAL\n';
+            formatted += '📝 CLIENTE: WILLIAN\n\n';
+            
+            formatted += '1. INFORMAÇÕES GERAIS\n';
+            formatted += `• Nome artístico: ${briefingData.nomeArtistico || 'Não informado'}\n`;
+            formatted += `• Área: ${briefingData.areaAtuacao || 'Não informado'}\n`;
+            formatted += `• Bio: ${briefingData.bioDescricao || 'Não informado'}\n\n`;
+            
+            formatted += '2. ESTILO VISUAL\n';
+            formatted += `• Vibe: ${briefingData.vibe ? briefingData.vibe.join(', ') : 'Não informado'}\n`;
+            formatted += `• Cores: ${briefingData.corPrincipal || 'Não informado'}\n`;
+            formatted += `• Logo: ${briefingData.temLogo || 'Não informado'}\n\n`;
+            
+            formatted += '3. CONTEÚDO\n';
+            formatted += `• Quantidade de projetos: ${briefingData.quantidadeProjetos || 'Não informado'}\n`;
+            formatted += `• Links: ${briefingData.linksProjetos || 'Não informado'}\n`;
+            formatted += `• Informações: ${briefingData.infosProjetos || 'Não informado'}\n\n`;
+            
+            formatted += '4. REFERÊNCIAS\n';
+            formatted += `• Rafa Webber: ${briefingData.referencia ? briefingData.referencia.join(', ') : 'Não informado'}\n`;
+            formatted += `• Outras: ${briefingData.outrasReferencias || 'Não informado'}\n\n`;
+            
+            formatted += '5. ESTRUTURA\n';
+            formatted += `• Seções: ${briefingData.secao ? briefingData.secao.join(', ') : 'Não informado'}\n`;
+            formatted += `• Seção extra: ${briefingData.secaoExtra || 'Não informado'}\n\n`;
+            
+            formatted += '6. CONTATOS\n';
+            formatted += `• Instagram: ${briefingData.instagram || 'Não informado'}\n`;
+            formatted += `• WhatsApp: ${briefingData.whatsapp || 'Não informado'}\n`;
+            formatted += `• Email: ${briefingData.emailOrcamento || 'Não informado'}\n`;
+            formatted += `• Outras redes: ${briefingData.outrasRedes || 'Não informado'}\n\n`;
+            
+            formatted += '7. EXTRAS\n';
+            formatted += `• Frase de impacto: ${briefingData.fraseImpacto || 'Não informado'}\n`;
+            formatted += `• História especial: ${briefingData.historiaEspecial || 'Não informado'}\n`;
+            formatted += `• Funcionalidade especial: ${briefingData.funcionalidadeEspecial || 'Não informado'}\n`;
+            formatted += `• Observações: ${briefingData.observacoes || 'Não informado'}\n`;
+            
+            return formatted;
+        }
+
+        // Carregar dados salvos se existirem
+        window.addEventListener('load', function() {
+            const savedData = localStorage.getItem('briefingData');
+            if (savedData) {
+                briefingData = JSON.parse(savedData);
+                // Restaurar campos preenchidos
+                Object.keys(briefingData).forEach(key => {
+                    const element = document.getElementById(key);
+                    if (element) {
+                        element.value = briefingData[key];
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html> 
