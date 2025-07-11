@@ -1643,12 +1643,15 @@ Descrição: Breve descrição (opcional)
         const totalQuestions = 7;
         let briefingData = {};
 
-        // Configuração EmailJS - usando suas credenciais do contrato.html
+        // Configuração EmailJS - template específico para briefing
         const CONFIG_EMAILJS = {
             serviceId: 'service_bj6c6km',
-            templateId: 'template_i076npw', 
+            templateId: 'template_briefing', // Template específico para briefing
             publicKey: 'E1K5MJNe_E2Dk5n7o'
         };
+
+        // 📋 IMPORTANTE: Criar template 'template_briefing' no EmailJS
+        // Instruções completas em: TEMPLATE_EMAILJS_BRIEFING.md
 
         // Sistema de Modal Apple Style
         function showModal(options = {}) {
@@ -2252,23 +2255,46 @@ Descrição: Breve descrição (opcional)
             // Preparar dados formatados para email
             const dadosFormatados = formatarDadosParaEmail();
             const templateParams = {
+                to_name: 'Rodrigo Rocha Giuntini',
                 to_email: 'rodrigorochagiuntini@bityx.app',
-                subject: '🎬 Novo Briefing - Willian (' + (briefingData.nomeArtistico || 'Nome artístico não informado') + ')',
-                cliente_nome: 'Willian',
-                cliente_email: briefingData.emailOrcamento || 'Não informado',
-                cliente_telefone: briefingData.whatsapp || 'Não informado',
-                data_contrato: new Date().toLocaleDateString('pt-BR'),
+                from_name: briefingData.nomeArtistico || 'Willian',
+                from_email: briefingData.emailOrcamento || 'Não informado',
+                subject: '🎬 Novo Briefing - ' + (briefingData.nomeArtistico || 'Willian'),
                 message: dadosFormatados,
-                assinatura_cliente: briefingData.dados || JSON.stringify(briefingData, null, 2),
-                assinatura_prestador: 'Sistema de briefing automático'
+                reply_to: briefingData.emailOrcamento || 'rodrigorochagiuntini@bityx.app'
             };
 
-            // Enviar email via EmailJS
+            // Enviar email via EmailJS (com fallback para template do contrato)
             return emailjs.send(
                 CONFIG_EMAILJS.serviceId,
                 CONFIG_EMAILJS.templateId,
                 templateParams
-            );
+            ).catch(error => {
+                // Se template do briefing não existir, usar template do contrato como fallback
+                if (error.text && error.text.includes('template_briefing')) {
+                    console.log('⚠️ Template briefing não encontrado, usando template do contrato...');
+                    
+                    // Adaptar parâmetros para template do contrato
+                    const fallbackParams = {
+                        to_email: 'rodrigorochagiuntini@bityx.app',
+                        subject: '🎬 Novo Briefing - ' + (briefingData.nomeArtistico || 'Willian'),
+                        cliente_nome: briefingData.nomeArtistico || 'Willian',
+                        cliente_email: briefingData.emailOrcamento || 'Não informado',
+                        cliente_telefone: briefingData.whatsapp || 'Não informado',
+                        data_contrato: new Date().toLocaleDateString('pt-BR'),
+                        message: dadosFormatados,
+                        assinatura_cliente: 'Briefing automatizado',
+                        assinatura_prestador: 'Sistema de briefing'
+                    };
+                    
+                    return emailjs.send(
+                        CONFIG_EMAILJS.serviceId,
+                        'template_i076npw', // Template do contrato
+                        fallbackParams
+                    );
+                }
+                throw error; // Re-throw se for outro erro
+            });
         }
 
 
@@ -2420,8 +2446,8 @@ Descrição: Breve descrição (opcional)
             const statusDiv = document.getElementById('statusServicos');
             if (!statusDiv) return;
 
-            // EmailJS já configurado com suas credenciais do contrato
-            statusDiv.innerHTML = '📧 EmailJS: ✅ Configurado e funcionando (mesmas credenciais do contrato)';
+            // EmailJS configurado com template específico para briefing
+            statusDiv.innerHTML = '📧 EmailJS: ✅ Configurado com template específico para briefing<br><small>Fallback: Template do contrato se necessário</small>';
         }
 
 
