@@ -431,6 +431,41 @@
             transform: none !important;
         }
 
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 48px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-contract {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background-size: 200% 200%;
+            animation: gradientShift 3s ease infinite;
+            color: white;
+            border: none;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-contract:hover {
+            background-position: right center;
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 15px 60px rgba(102, 126, 234, 0.5);
+        }
+
+        @keyframes gradientShift {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
         .step-indicator {
             text-align: center;
             color: #64748b;
@@ -1577,60 +1612,13 @@ Descrição: Breve descrição (opcional)
                             <div class="pulse">🎉</div>
                             <h2>Briefing concluído, Willian!</h2>
                             <p>Perfeito! Agora tenho todas as informações necessárias para criar o site ideal para o seu portfólio. Suas respostas foram salvas e já estou visualizando como tudo vai ficar incrível!</p>
-                            <p>Em breve entro em contato para alinharmos os próximos passos e começarmos a dar vida ao seu projeto, Willian.</p>
+                            <p>Agora vamos para o próximo passo: definir os detalhes do contrato para dar vida ao seu projeto!</p>
                             
-                            <div class="contact-info">
-                                <h3>📞 Próximos passos:</h3>
-                                <p><strong>📧 Email:</strong> <a href="mailto:rodrigorochagiuntini@bityx.app">rodrigorochagiuntini@bityx.app</a></p>
-                                <p><strong>📱 WhatsApp:</strong> <a href="https://wa.me/5511991449842">(11) 99144-9842</a></p>
-                                <p><strong>⏰ Prazo:</strong> Retorno em até 24 horas</p>
-                                
-                                <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(102, 126, 234, 0.2);">
-                                    <h3>💾 Suas respostas:</h3>
-                                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px;">
-                                        <button type="button" onclick="downloadBriefing()" class="btn btn-secondary" style="font-size: 0.9em; padding: 8px 16px;">
-                                            📄 Baixar Briefing
-                                        </button>
-                                        <button type="button" onclick="clearBriefingData()" class="btn btn-secondary" style="font-size: 0.9em; padding: 8px 16px;">
-                                            🗑️ Limpar Dados
-                                        </button>
-                                        <button type="button" onclick="testarEnvioOnline()" class="btn btn-primary" style="font-size: 0.9em; padding: 8px 16px; grid-column: 1 / -1;">
-                                            📧 Testar Envio por Email
-                                        </button>
-                                    </div>
-                                    <div style="margin-top: 15px;">
-                                        <h4 style="font-size: 0.9em; color: #64748b; margin-bottom: 8px;">Status do EmailJS:</h4>
-                                        <div id="statusServicos" style="font-size: 0.8em; color: #94a3b8;"></div>
-                                    </div>
-                                    
-                                    <!-- Botões de Debug -->
-                                    <div style="margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px; border: 1px solid #e9ecef;">
-                                        <h4 style="font-size: 0.9em; color: #6c757d; margin-bottom: 10px;">🔧 Ferramentas de Debug</h4>
-                                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-                                            <button type="button" onclick="diagnosticarProblemas()" style="background: #17a2b8; color: white; border: none; padding: 8px 12px; border-radius: 4px; font-size: 0.8em; cursor: pointer;">
-                                                🔍 Diagnosticar
-                                            </button>
-                                            <button type="button" onclick="testarConexaoEmailJS()" style="background: #17a2b8; color: white; border: none; padding: 8px 12px; border-radius: 4px; font-size: 0.8em; cursor: pointer;">
-                                                📡 Testar Conexão
-                                            </button>
-                                            <button type="button" onclick="console.log('Dados do briefing:', briefingData)" style="background: #17a2b8; color: white; border: none; padding: 8px 12px; border-radius: 4px; font-size: 0.8em; cursor: pointer;">
-                                                📋 Ver Dados
-                                            </button>
-                                            <button type="button" onclick="console.log('Configuração EmailJS:', CONFIG_EMAILJS)" style="background: #17a2b8; color: white; border: none; padding: 8px 12px; border-radius: 4px; font-size: 0.8em; cursor: pointer;">
-                                                ⚙️ Ver Config
-                                            </button>
-                                            <button type="button" onclick="mostrarGuiaTemplate()" style="background: #28a745; color: white; border: none; padding: 8px 12px; border-radius: 4px; font-size: 0.8em; cursor: pointer;">
-                                                📝 Como Criar Template
-                                            </button>
-                                            <button type="button" onclick="enviarComFallback()" style="background: #fd7e14; color: white; border: none; padding: 8px 12px; border-radius: 4px; font-size: 0.8em; cursor: pointer;">
-                                                🔄 Forçar Fallback
-                                            </button>
-                                        </div>
-                                        <p style="margin: 8px 0 0 0; font-size: 0.75em; color: #6c757d;">
-                                            Use as ferramentas acima para diagnosticar problemas de envio. Verifique o console do navegador (F12) para logs detalhados.
-                                        </p>
-                                    </div>
-                                </div>
+                            <div style="margin-top: 40px; text-align: center; position: relative;">
+                                <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 120%; height: 120%; background: radial-gradient(circle, rgba(102, 126, 234, 0.1) 0%, transparent 70%); border-radius: 50%; opacity: 0; transition: opacity 0.3s ease; pointer-events: none;" id="buttonGlow"></div>
+                               <a href="contrato.html"> <button type="button" onclick="irParaContrato()" class="btn btn-primary btn-contract" style="font-size: 1.2em; padding: 16px 32px; border-radius: 12px; box-shadow: 0 8px 32px rgba(102, 126, 234, 0.3); position: relative; z-index: 1;" onmouseover="document.getElementById('buttonGlow').style.opacity = '1'" onmouseout="document.getElementById('buttonGlow').style.opacity = '0'">
+                                    🚀 Avançar para Contrato
+                                </button></a>
                             </div>
                         </div>
                     </div>
@@ -1674,11 +1662,11 @@ Descrição: Breve descrição (opcional)
         // Configuração EmailJS - template específico para briefing
         const CONFIG_EMAILJS = {
             serviceId: 'service_bj6c6km',
-            templateId: 'template_z16zup7', // Template específico para briefing
+            templateId: 'template_9lh94e1', // Template específico para briefing
             publicKey: 'E1K5MJNe_E2Dk5n7o'
         };
 
-        // 📋 TEMPLATE CRIADO: 'template_z16zup7' já está no EmailJS
+        // 📋 TEMPLATE CRIADO: 'template_9lh94e1' já está no EmailJS
         // Instruções completas em: TEMPLATE_EMAILJS_BRIEFING.md
 
         // Sistema de Modal Apple Style
@@ -2253,7 +2241,7 @@ Descrição: Breve descrição (opcional)
                 // Inicializar EmailJS
                 emailjs.init({ publicKey: CONFIG_EMAILJS.publicKey });
                 
-                // Adaptar parâmetros para template do contrato
+                // Adaptar parâmetros para template do briefing
                 const fallbackParams = {
                     to_email: 'rodrigorochagiuntini@bityx.app',
                     subject: '🎬 Novo Briefing - ' + (briefingData.nomeArtistico || 'Willian'),
@@ -2270,7 +2258,7 @@ Descrição: Breve descrição (opcional)
                 
                 const response = await emailjs.send(
                     CONFIG_EMAILJS.serviceId,
-                    'template_i076npw', // Template do contrato que sabemos que funciona
+                    'template_9lh94e1', // Template do briefing "Brifing"
                     fallbackParams
                 );
                 
@@ -2281,7 +2269,7 @@ Descrição: Breve descrição (opcional)
                     type: 'success',
                     icon: '✅',
                     title: 'Briefing enviado com sucesso!',
-                    message: 'Seu briefing foi enviado usando o template do contrato (método garantido). O Rodrigo receberá todos os dados normalmente.',
+                    message: 'Seu briefing foi enviado usando o template específico do briefing "Brifing". O Rodrigo receberá todos os dados normalmente.',
                     buttons: [{text: 'Perfeito', action: 'close', style: 'success'}]
                 });
                 
@@ -2302,153 +2290,8 @@ Descrição: Breve descrição (opcional)
             }
         }
 
-        async function enviarViaEmailJS() {
-            console.log('🔍 [DEBUG] Iniciando envio via EmailJS...');
-            
-            // Verificar se EmailJS está disponível
-            if (typeof emailjs === 'undefined') {
-                console.error('❌ [DEBUG] EmailJS não foi carregado');
-                throw new Error('❌ EmailJS não foi carregado. Verifique sua conexão.');
-            }
-
-            // Verificar configuração
-            console.log('🔍 [DEBUG] Configuração EmailJS:', CONFIG_EMAILJS);
-            
-            // Inicializar EmailJS v4 (mesmo método do contrato)
-            try {
-                emailjs.init({
-                    publicKey: CONFIG_EMAILJS.publicKey,
-                });
-                console.log('✅ [DEBUG] EmailJS inicializado com sucesso');
-            } catch (initError) {
-                console.error('❌ [DEBUG] Erro ao inicializar EmailJS:', initError);
-                throw new Error('❌ Erro ao inicializar EmailJS: ' + initError.message);
-            }
-            
-            // Preparar dados formatados para email
-            const dadosFormatados = formatarDadosParaEmail();
-            const dataAtual = new Date().toLocaleDateString('pt-BR', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
-            });
-            
-            const templateParams = {
-                // Parâmetros básicos
-                to_name: 'Rodrigo Rocha Giuntini',
-                to_email: 'rodrigorochagiuntini@bityx.app',
-                from_name: briefingData.nomeArtistico || 'Willian',
-                from_email: briefingData.emailOrcamento || 'Não informado',
-                subject: '🎬 Novo Briefing - ' + (briefingData.nomeArtistico || 'Willian'),
-                message: dadosFormatados,
-                reply_to: briefingData.emailOrcamento || 'rodrigorochagiuntini@bityx.app',
-                data_briefing: dataAtual,
-                
-                // 1. INFORMAÇÕES GERAIS
-                cliente_nome_artistico: briefingData.nomeArtistico || 'Não informado',
-                cliente_area: briefingData.areaAtuacao || 'Não informado',
-                cliente_bio: briefingData.bioDescricao || 'Não informado',
-                
-                // 2. ESTILO VISUAL
-                cliente_vibe: briefingData.vibe ? briefingData.vibe.join(', ') : 'Não informado',
-                cliente_vibe_principal: briefingData.vibe ? briefingData.vibe[0] : 'Não informado',
-                cliente_cores: briefingData.corPrincipal || 'Não informado',
-                cliente_tem_logo: briefingData.temLogo || 'Não informado',
-                
-                // 3. CONTEÚDO
-                quantidade_projetos: briefingData.quantidadeProjetos || 'Não informado',
-                links_projetos: briefingData.linksProjetos || 'Não informado',
-                infos_projetos: briefingData.infosProjetos || 'Não informado',
-                
-                // 4. REFERÊNCIAS
-                referencia_rafa: briefingData.referencia ? briefingData.referencia.join(', ') : 'Não informado',
-                outras_referencias: briefingData.outrasReferencias || 'Não informado',
-                
-                // 5. ESTRUTURA
-                secoes_site: briefingData.secao ? briefingData.secao.join(', ') : 'Não informado',
-                secao_extra: briefingData.secaoExtra || 'Não informado',
-                
-                // 6. CONTATOS
-                cliente_instagram: briefingData.instagram || 'Não informado',
-                cliente_whatsapp: briefingData.whatsapp || 'Não informado',
-                cliente_whatsapp_clean: (briefingData.whatsapp || '').replace(/\D/g, ''),
-                cliente_email: briefingData.emailOrcamento || 'Não informado',
-                outras_redes: briefingData.outrasRedes || 'Não informado',
-                
-                // 7. EXTRAS
-                frase_impacto: briefingData.fraseImpacto || 'Não informado',
-                historia_especial: briefingData.historiaEspecial || 'Não informado',
-                funcionalidade_especial: briefingData.funcionalidadeEspecial || 'Não informado',
-                observacoes: briefingData.observacoes || 'Não informado'
-            };
-
-            // Debug: Verificar dados antes do envio
-            console.log('🔍 [DEBUG] Dados do briefing:', briefingData);
-            console.log('🔍 [DEBUG] Parâmetros a serem enviados:', templateParams);
-            console.log('🔍 [DEBUG] Tentando enviar para:', CONFIG_EMAILJS.serviceId, CONFIG_EMAILJS.templateId);
-            
-            // Validar parâmetros obrigatórios
-            const requiredParams = ['to_name', 'to_email', 'from_name', 'subject'];
-            const missingParams = requiredParams.filter(param => !templateParams[param]);
-            if (missingParams.length > 0) {
-                console.error('❌ [DEBUG] Parâmetros obrigatórios faltando:', missingParams);
-                throw new Error('❌ Parâmetros obrigatórios faltando: ' + missingParams.join(', '));
-            }
-            
-            // TENTATIVA 1: Usar template específico do briefing
-            console.log('🔍 [DEBUG] TENTATIVA 1: Template específico do briefing');
-            
-            try {
-                const response = await emailjs.send(
-                    CONFIG_EMAILJS.serviceId,
-                    CONFIG_EMAILJS.templateId,
-                    templateParams
-                );
-                console.log('✅ [DEBUG] SUCESSO: Email enviado com template específico:', response);
-                return response;
-                
-            } catch (error) {
-                console.error('❌ [DEBUG] FALHA na tentativa 1:', error);
-                console.error('❌ [DEBUG] Status:', error.status);
-                console.error('❌ [DEBUG] Text:', error.text);
-                
-                // TENTATIVA 2: Fallback automático para template do contrato
-                console.log('🔄 [DEBUG] TENTATIVA 2: Fallback para template do contrato');
-                
-                // Adaptar parâmetros para template do contrato
-                const fallbackParams = {
-                    to_email: 'rodrigorochagiuntini@bityx.app',
-                    subject: '🎬 Novo Briefing - ' + (briefingData.nomeArtistico || 'Willian'),
-                    cliente_nome: briefingData.nomeArtistico || 'Willian',
-                    cliente_email: briefingData.emailOrcamento || 'Não informado',
-                    cliente_telefone: briefingData.whatsapp || 'Não informado',
-                    data_contrato: new Date().toLocaleDateString('pt-BR'),
-                    message: dadosFormatados,
-                    assinatura_cliente: 'Briefing automatizado',
-                    assinatura_prestador: 'Sistema de briefing'
-                };
-                
-                console.log('🔍 [DEBUG] Parâmetros do fallback:', fallbackParams);
-                
-                try {
-                    const fallbackResponse = await emailjs.send(
-                        CONFIG_EMAILJS.serviceId,
-                        'template_i076npw', // Template do contrato
-                        fallbackParams
-                    );
-                    console.log('✅ [DEBUG] SUCESSO: Fallback enviado com sucesso:', fallbackResponse);
-                    // Marcar que foi enviado via fallback
-                    fallbackResponse.fallback = true;
-                    return fallbackResponse;
-                    
-                } catch (fallbackError) {
-                    console.error('❌ [DEBUG] FALHA: Erro no fallback também:', fallbackError);
-                    throw fallbackError;
-                }
-            }
-        }
+        // FUNÇÃO enviarViaEmailJS REMOVIDA - Estava causando erro 400
+        // Agora usa apenas o método direto e garantido em enviarBriefingPorEmail()
 
 
 
@@ -2586,8 +2429,8 @@ Descrição: Breve descrição (opcional)
             showModal({
                 type: 'info',
                 icon: '📧',
-                title: 'Testando envio...',
-                message: 'Tentando enviar com template específico. Se falhar, usará fallback automático.',
+                title: 'Enviando briefing...',
+                message: 'Enviando briefing usando template específico do briefing "Brifing".',
                 buttons: [] // Sem botões para simular loading
             });
 
@@ -2610,21 +2453,25 @@ Descrição: Breve descrição (opcional)
                     publicKey: CONFIG_EMAILJS.publicKey,
                 });
 
-                // Parâmetros de teste mínimos
+                // Parâmetros de teste usando template que funciona
                 const testParams = {
-                    to_name: 'Teste',
                     to_email: 'teste@example.com',
-                    from_name: 'Sistema',
                     subject: 'Teste de Conexão',
-                    message: 'Teste de conexão com EmailJS'
+                    cliente_nome: 'Sistema de Teste',
+                    cliente_email: 'teste@example.com',
+                    cliente_telefone: 'N/A',
+                    data_contrato: new Date().toLocaleDateString('pt-BR'),
+                    message: 'Teste de conexão com EmailJS - Briefing',
+                    assinatura_cliente: 'Teste automatizado',
+                    assinatura_prestador: 'Sistema de briefing'
                 };
 
                 console.log('🔍 [DEBUG] Enviando teste com parâmetros:', testParams);
 
-                // Tentar enviar um email de teste
+                // Tentar enviar um email de teste usando template do briefing
                 const response = await emailjs.send(
                     CONFIG_EMAILJS.serviceId,
-                    CONFIG_EMAILJS.templateId,
+                    'template_9lh94e1', // Template do briefing "Brifing"
                     testParams
                 );
 
@@ -2692,7 +2539,7 @@ Descrição: Breve descrição (opcional)
                 type: 'info',
                 icon: '🔄',
                 title: 'Enviando via fallback...',
-                message: 'Enviando briefing usando template do contrato (método garantido).',
+                message: 'Enviando briefing usando template específico do briefing "Brifing".',
                 buttons: []
             });
 
@@ -2703,7 +2550,7 @@ Descrição: Breve descrição (opcional)
                 // Inicializar EmailJS
                 emailjs.init({ publicKey: CONFIG_EMAILJS.publicKey });
                 
-                // Adaptar parâmetros para template do contrato
+                // Adaptar parâmetros para template do briefing
                 const fallbackParams = {
                     to_email: 'rodrigorochagiuntini@bityx.app',
                     subject: '🎬 Novo Briefing - ' + (briefingData.nomeArtistico || 'Willian'),
@@ -2720,7 +2567,7 @@ Descrição: Breve descrição (opcional)
                 
                 const response = await emailjs.send(
                     CONFIG_EMAILJS.serviceId,
-                    'template_i076npw', // Template do contrato
+                    'template_9lh94e1', // Template do briefing "Brifing"
                     fallbackParams
                 );
                 
@@ -2731,7 +2578,7 @@ Descrição: Breve descrição (opcional)
                     type: 'success',
                     icon: '✅',
                     title: 'Briefing enviado via fallback!',
-                    message: 'Seu briefing foi enviado com sucesso usando o template do contrato. O Rodrigo receberá todos os dados normalmente.',
+                    message: 'Seu briefing foi enviado com sucesso usando o template específico do briefing "Brifing". O Rodrigo receberá todos os dados normalmente.',
                     buttons: [{text: 'Perfeito', action: 'close', style: 'success'}]
                 });
                 
@@ -2764,8 +2611,8 @@ Descrição: Breve descrição (opcional)
 2. Clique em "Create New Template"
 
 3. Configure:
-   • Template ID: template_z16zup7
-   • Template Name: Briefing Portfolio Audiovisual
+   • Template ID: template_9lh94e1
+   • Template Name: Brifing
 
 4. Cole o HTML do arquivo TEMPLATE_HTML_BRIEFING.html
 
@@ -2773,7 +2620,7 @@ Descrição: Breve descrição (opcional)
 
 6. Salve e teste
 
-Enquanto isso, o sistema usará o template do contrato automaticamente.`,
+Enquanto isso, o sistema tentará usar o template do briefing diretamente.`,
                 buttons: [
                     {text: 'Abrir Dashboard', action: () => { 
                         window.open('https://dashboard.emailjs.com/admin/templates', '_blank'); 
@@ -2791,15 +2638,15 @@ Enquanto isso, o sistema usará o template do contrato automaticamente.`,
             const statusDiv = document.getElementById('statusServicos');
             if (!statusDiv) return;
 
-            // Verificar se template existe testando uma conexão
-            statusDiv.innerHTML = '📧 EmailJS: 🔄 Verificando template...<br><small>Testando template_z16zup7</small>';
+            // Verificar se template do briefing funciona
+            statusDiv.innerHTML = '📧 EmailJS: 🔄 Verificando conexão...<br><small>Testando template do briefing</small>';
             
-            // Testar template específico
-            testarTemplateEspecifico().then(exists => {
-                if (exists) {
-                    statusDiv.innerHTML = '📧 EmailJS: ✅ Template específico funcionando<br><small>template_z16zup7 encontrado e ativo</small>';
+            // Testar template do briefing (que é o que usamos)
+            testarTemplateEspecifico().then(works => {
+                if (works) {
+                    statusDiv.innerHTML = '📧 EmailJS: ✅ Sistema funcionando<br><small>Usando template do briefing "Brifing"</small>';
                 } else {
-                    statusDiv.innerHTML = '📧 EmailJS: ⚠️ Template não encontrado<br><small>Usando fallback automático (template do contrato)</small>';
+                    statusDiv.innerHTML = '📧 EmailJS: ❌ Problema de conectividade<br><small>Verifique sua conexão com internet</small>';
                 }
             }).catch(() => {
                 statusDiv.innerHTML = '📧 EmailJS: ❌ Erro na verificação<br><small>Verifique conexão com internet</small>';
@@ -2808,24 +2655,26 @@ Enquanto isso, o sistema usará o template do contrato automaticamente.`,
 
         async function testarTemplateEspecifico() {
             try {
-                // Tentar enviar um teste mínimo apenas para verificar se template existe
+                // Testa o template específico do briefing "Brifing"
                 emailjs.init({ publicKey: CONFIG_EMAILJS.publicKey });
                 
                 const testParams = {
-                    to_name: 'Teste',
                     to_email: 'test@test.com',
-                    from_name: 'Teste',
                     subject: 'Teste Template',
-                    message: 'Teste'
+                    cliente_nome: 'Teste Sistema',
+                    cliente_email: 'test@test.com',
+                    cliente_telefone: 'N/A',
+                    data_contrato: new Date().toLocaleDateString('pt-BR'),
+                    message: 'Teste do template específico do briefing "Brifing"',
+                    assinatura_cliente: 'Teste automatizado',
+                    assinatura_prestador: 'Sistema de briefing'
                 };
 
-                await emailjs.send(CONFIG_EMAILJS.serviceId, CONFIG_EMAILJS.templateId, testParams);
-                return true; // Template existe
+                await emailjs.send(CONFIG_EMAILJS.serviceId, 'template_9lh94e1', testParams);
+                return true; // Template do briefing funciona
             } catch (error) {
-                if (error.text && error.text.includes('The template ID not found')) {
-                    return false; // Template não existe
-                }
-                throw error; // Outro tipo de erro
+                console.error('❌ [DEBUG] Erro no teste do template do briefing:', error);
+                return false; // Template do briefing não funciona
             }
         }
 
@@ -2887,6 +2736,32 @@ Enquanto isso, o sistema usará o template do contrato automaticamente.`,
                 message: 'Todos os dados foram removidos com sucesso. Você pode começar o briefing novamente.',
                 buttons: [{text: 'OK', action: 'close', style: 'success'}]
             });
+        }
+
+        // Função para ir para o contrato
+        function irParaContrato() {
+            console.log('🚀 Avançando para contrato...');
+            
+            // Salvar dados antes de ir para o contrato
+            saveCurrentData();
+            
+            // Mostrar modal de loading
+            showModal({
+                type: 'info',
+                icon: '📧',
+                title: 'Enviando briefing...',
+                message: 'Enviando seu briefing por email e redirecionando para o contrato...',
+                buttons: [] // Sem botões para simular loading
+            });
+            
+            // Enviar briefing por email
+            enviarBriefingPorEmail();
+            
+            // Redirecionar para contrato após breve pausa
+            setTimeout(() => {
+                console.log('🔄 Redirecionando para contrato.html');
+                window.location.href = 'contrato.html';
+            }, 2000);
         }
 
         // Carregar dados salvos se existirem
